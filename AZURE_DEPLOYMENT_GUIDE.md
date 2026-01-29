@@ -83,13 +83,13 @@ az webapp create \
 
 Go to Azure Portal → Your Backend App Service → **Configuration** → **Application settings**
 
-Add these environment variables:
+Add these environment variables (use your own secure values):
 
 ```
-DATABASE_URL = postgresql://church_user:Debreiyesus2026@churchserverdevelopment.postgres.database.azure.com:5432/debre_iyesus_db?sslmode=require
+DATABASE_URL = postgresql://username:password@your-server.postgres.database.azure.com:5432/your_database?sslmode=require
 PORT = 8080
 NODE_ENV = production
-JWT_SECRET = d42f911fd925cbfbfb8d49cc5e901449bbf3979afd28a691957f3b5988074871
+JWT_SECRET = your-secure-random-secret-here
 FRONTEND_URL = https://debre-iyesus-frontend.azurewebsites.net
 BACKEND_URL = https://debre-iyesus-backend.azurewebsites.net
 ```
@@ -97,11 +97,13 @@ BACKEND_URL = https://debre-iyesus-backend.azurewebsites.net
 Optional (if using SMS features):
 ```
 AZURE_COMMUNICATION_CONNECTION_STRING = your_connection_string_here
-AZURE_SMS_SENDER_ID = DebreIyesus
+AZURE_SMS_SENDER_ID = YourChurchName
 SMS_COST_PER_MESSAGE = 0.16
 ```
 
-**Important**: Click **"Save"** after adding the variables!
+**Important**:
+- Replace all placeholder values with your actual credentials
+- Click **"Save"** after adding the variables!
 
 ### Frontend Configuration
 
@@ -150,7 +152,7 @@ Add these secrets:
 3. Set **Startup Command**: `node server.js`
 4. Click **"Save"**
 
-### Configure CORS (if needed):
+### Configure CORS:
 
 1. Go to **debre-iyesus-backend** → **CORS**
 2. Add allowed origins:
@@ -164,30 +166,6 @@ Add these secrets:
 2. Go to **Configuration** → **General settings**
 3. Set **Startup Command**: `pm2 serve dist 8080 --spa`
 4. Click **"Save"**
-
-### Add web.config for frontend (if needed):
-
-Create a `frontend/dist/web.config` file (this will be included in the build):
-
-```xml
-<?xml version="1.0"?>
-<configuration>
-  <system.webServer>
-    <rewrite>
-      <rules>
-        <rule name="Handle History Mode and custom 404/500" stopProcessing="true">
-          <match url="(.*)" />
-          <conditions logicalGrouping="MatchAll">
-            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
-            <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
-          </conditions>
-          <action type="Rewrite" url="index.html" />
-        </rule>
-      </rules>
-    </rewrite>
-  </system.webServer>
-</configuration>
-```
 
 ## Step 7: Test the Deployment
 
@@ -218,7 +196,7 @@ From now on, whenever you push changes to the `main` branch:
 3. **Test Login**:
    - Go to https://debre-iyesus-frontend.azurewebsites.net/admin/login
    - Username: `admin`
-   - Password: `admin123` (change this in production!)
+   - Password: `admin123` (CHANGE THIS IMMEDIATELY!)
 
 ## Monitoring and Logs
 
@@ -258,6 +236,31 @@ Enable Application Insights for better monitoring:
 - Check `DATABASE_URL` format is correct
 - Test connection from backend logs
 
+## Security Best Practices
+
+**IMPORTANT**: Before deploying to production:
+
+1. **Change Default Credentials**
+   - Change the default admin password immediately
+   - Generate a strong JWT secret: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
+
+2. **Environment Variables**
+   - Never commit `.env` files to Git
+   - Use Azure Key Vault for storing secrets (recommended)
+   - Rotate credentials regularly
+
+3. **Database Security**
+   - Use strong database passwords
+   - Configure PostgreSQL firewall rules
+   - Enable SSL connections
+   - Regular backups
+
+4. **Application Security**
+   - Enable HTTPS only
+   - Configure rate limiting
+   - Keep dependencies updated
+   - Regular security audits
+
 ## Cost Optimization
 
 **Free Tier Option:**
@@ -267,18 +270,6 @@ Enable Application Insights for better monitoring:
 **Production Option:**
 - Use **B1 (Basic)** or higher for production
 - Estimated cost: ~$13-55/month per app
-
-## Security Checklist
-
-- [ ] Change default admin password
-- [ ] Review and update JWT_SECRET
-- [ ] Configure Azure AD authentication (optional)
-- [ ] Enable HTTPS only
-- [ ] Configure custom domain (optional)
-- [ ] Set up Azure Key Vault for secrets (recommended)
-- [ ] Enable Application Insights
-- [ ] Configure backup and disaster recovery
-- [ ] Review and update database firewall rules
 
 ## Custom Domain (Optional)
 
@@ -302,11 +293,15 @@ For issues or questions:
 
 ## Quick Reference
 
-**Backend URL**: https://debre-iyesus-backend.azurewebsites.net
-**Frontend URL**: https://debre-iyesus-frontend.azurewebsites.net
-**Database**: churchserverdevelopment.postgres.database.azure.com
-**GitHub Repo**: https://github.com/eyoba/debre-iyesus
-
 **GitHub Actions Workflows:**
 - `.github/workflows/deploy-backend.yml`
 - `.github/workflows/deploy-frontend.yml`
+
+**Azure Resources:**
+- Backend App: `debre-iyesus-backend`
+- Frontend App: `debre-iyesus-frontend`
+- Resource Group: `debre-iyesus-rg`
+
+**URLs (after deployment):**
+- Frontend: `https://debre-iyesus-frontend.azurewebsites.net`
+- Backend: `https://debre-iyesus-backend.azurewebsites.net`
