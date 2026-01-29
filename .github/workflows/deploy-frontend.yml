@@ -1,0 +1,48 @@
+name: Deploy Frontend to Azure App Service
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/deploy-frontend.yml'
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: debre-iyesus-frontend
+  NODE_VERSION: '18.x'
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    name: Build and Deploy Frontend
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Install dependencies and build
+      working-directory: ./frontend
+      env:
+        VITE_API_URL: https://debre-iyesus-backend.azurewebsites.net/api
+      run: |
+        npm install
+        npm run build
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_FRONTEND_PUBLISH_PROFILE }}
+        package: ./frontend/dist
+
+    - name: Deployment notification
+      if: success()
+      run: |
+        echo "✅ Frontend deployed successfully to https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net"
