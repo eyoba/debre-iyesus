@@ -37,7 +37,7 @@ Update `backend/.env` file:
 ```env
 # Azure Blob Storage Configuration (for file uploads)
 AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=https;AccountName=youraccountname;AccountKey=yourkey;EndpointSuffix=core.windows.net
-AZURE_STORAGE_CONTAINER_NAME=uploads
+AZURE_STORAGE_CONTAINER_NAME=church-logo
 ```
 
 Replace the connection string with the one you copied from Azure Portal.
@@ -49,7 +49,7 @@ Add environment variables to your backend app service:
 ```bash
 az webapp config appsettings set --name debreiyesus-api --resource-group rg-ki-chat-b2c --settings AZURE_STORAGE_CONNECTION_STRING="your_connection_string_here"
 
-az webapp config appsettings set --name debreiyesus-api --resource-group rg-ki-chat-b2c --settings AZURE_STORAGE_CONTAINER_NAME="uploads"
+az webapp config appsettings set --name debreiyesus-api --resource-group rg-ki-chat-b2c --settings AZURE_STORAGE_CONTAINER_NAME="church-logo"
 ```
 
 Or via Azure Portal:
@@ -61,7 +61,7 @@ Or via Azure Portal:
    - Value: Your connection string
 5. Add another:
    - Name: `AZURE_STORAGE_CONTAINER_NAME`
-   - Value: `uploads`
+   - Value: `church-logo`
 6. Click "Save"
 
 ## Step 4: Test the Upload
@@ -75,7 +75,7 @@ Or via Azure Portal:
 2. **Check logs** - you should see:
    ```
    ✅ Azure Blob Storage client initialized
-   📦 Container: uploads
+   📦 Container: church-logo
    ```
 
 3. **Upload a logo** from http://localhost:5190/admin/church-info
@@ -129,7 +129,7 @@ The container is created with `blob` access level, which means:
 
 If you need to change access level:
 ```bash
-az storage container set-permission --name uploads --account-name yourstorageaccount --public-access blob
+az storage container set-permission --name church-logo --account-name yourstorageaccount --public-access blob
 ```
 
 ## Security Note
