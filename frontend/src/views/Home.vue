@@ -433,8 +433,8 @@ export default {
 }
 
 .site-logo {
-  width: 300px;
-  height: 300px;
+  width: 200px;
+  height: 200px;
   object-fit: contain;
   background: white;
   padding: 1rem;
@@ -449,9 +449,9 @@ export default {
 }
 
 .site-logo-placeholder {
-  font-size: 8rem;
-  width: 300px;
-  height: 300px;
+  font-size: 6rem;
+  width: 200px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -504,9 +504,9 @@ export default {
 
   .site-logo,
   .site-logo-placeholder {
-    width: 220px;
-    height: 220px;
-    font-size: 6rem;
+    width: 160px;
+    height: 160px;
+    font-size: 5rem;
   }
 
   .lead {
