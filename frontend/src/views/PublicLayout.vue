@@ -42,7 +42,7 @@ export default {
   methods: {
     async fetchSiteSettings() {
       try {
-        const response = await axios.get(`${API_URL}/site-settings`)
+        const response = await axios.get(`${API_URL}/church`)
         this.navTitle = response.data.nav_title || ''
       } catch (err) {
         console.error('Error fetching site settings:', err)

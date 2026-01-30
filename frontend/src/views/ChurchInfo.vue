@@ -36,6 +36,18 @@
         </div>
 
         <div class="form-group">
+          <label for="nav_title">Navigation Title (Top Left Corner)</label>
+          <input
+            id="nav_title"
+            v-model="church.nav_title"
+            type="text"
+            placeholder="Churches Directory"
+            :disabled="saving"
+          >
+          <small class="form-help">This text appears in the top left corner of the navigation bar</small>
+        </div>
+
+        <div class="form-group">
           <label for="description">Description</label>
           <textarea
             id="description"
@@ -311,6 +323,7 @@ export default {
       church: {
         name: '',
         description: '',
+        nav_title: '',
         pastor_name: '',
         address: '',
         phone: '',
@@ -370,6 +383,7 @@ export default {
             email: response.data.email || '',
             website: response.data.website || '',
             logo_url: response.data.logo_url || '',
+            nav_title: response.data.nav_title || '',
             sunday_service_time: response.data.sunday_service_time || '',
             wednesday_service_time: response.data.wednesday_service_time || '',
             other_service_times: response.data.other_service_times || '',
