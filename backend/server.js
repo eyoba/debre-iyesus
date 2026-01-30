@@ -412,8 +412,8 @@ app.put('/api/admin/church-info', authenticateToken, requireSuperAdmin, async (r
   }
 });
 
-// Upload church logo
-app.post('/api/admin/upload-logo', authenticateToken, requireSuperAdmin, upload.single('logo'), async (req, res) => {
+// Upload church logo handler
+const uploadChurchLogo = async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -439,7 +439,11 @@ app.post('/api/admin/upload-logo', authenticateToken, requireSuperAdmin, upload.
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-});
+};
+
+// Upload church logo endpoints (both paths for compatibility)
+app.post('/api/admin/upload-logo', authenticateToken, requireSuperAdmin, upload.single('logo'), uploadChurchLogo);
+app.post('/api/admin/upload-church-logo', authenticateToken, requireSuperAdmin, upload.single('logo'), uploadChurchLogo);
 
 // ============================================
 // NEWS MANAGEMENT
