@@ -433,14 +433,14 @@ export default {
 }
 
 .site-logo {
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   object-fit: contain;
   background: white;
-  padding: 0.75rem;
+  padding: 1rem;
   border-radius: 50%;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-  border: 4px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  border: 5px solid rgba(255, 255, 255, 0.95);
   transition: transform 0.3s ease;
 }
 
@@ -449,16 +449,16 @@ export default {
 }
 
 .site-logo-placeholder {
-  font-size: 6rem;
-  width: 200px;
-  height: 200px;
+  font-size: 8rem;
+  width: 300px;
+  height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: white;
   border-radius: 50%;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-  border: 4px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  border: 5px solid rgba(255, 255, 255, 0.95);
 }
 
 @media (max-width: 992px) {
@@ -504,9 +504,9 @@ export default {
 
   .site-logo,
   .site-logo-placeholder {
-    width: 160px;
-    height: 160px;
-    font-size: 4.5rem;
+    width: 220px;
+    height: 220px;
+    font-size: 6rem;
   }
 
   .lead {
