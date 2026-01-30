@@ -433,11 +433,11 @@ export default {
 }
 
 .site-logo {
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   object-fit: contain;
   background: white;
-  padding: 0.5rem;
+  padding: 0.75rem;
   border-radius: 50%;
   box-shadow: 0 6px 20px rgba(0,0,0,0.2);
   border: 4px solid rgba(255, 255, 255, 0.9);
@@ -449,9 +449,9 @@ export default {
 }
 
 .site-logo-placeholder {
-  font-size: 5rem;
-  width: 150px;
-  height: 150px;
+  font-size: 6rem;
+  width: 200px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -504,9 +504,9 @@ export default {
 
   .site-logo,
   .site-logo-placeholder {
-    width: 120px;
-    height: 120px;
-    font-size: 3.5rem;
+    width: 160px;
+    height: 160px;
+    font-size: 4.5rem;
   }
 
   .lead {
