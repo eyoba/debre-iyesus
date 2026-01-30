@@ -347,12 +347,41 @@ app.get('/api/admin/dashboard', authenticateToken, async (req, res) => {
 // Update church info (requires super admin)
 app.put('/api/admin/church-info', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
+    console.log('Received church info update:', JSON.stringify(req.body, null, 2));
+
     const {
       name, address, phone, email, website, logo_url,
       pastor_name, pastor_phone, pastor_email, pastor_bio,
       sunday_service_time, wednesday_service_time, other_service_times,
-      description, mission_statement, background_color
+      description, mission_statement, background_color, show_members_link,
+      facebook,
+      field_label_pastor, field_label_address, field_label_phone,
+      field_label_email, field_label_website, field_label_facebook
     } = req.body;
+
+    console.log('Field labels received:', { field_label_pastor, field_label_address, field_label_phone, field_label_email, field_label_website, field_label_facebook });
+
+    // First, ensure the field_label columns exist
+    try {
+      await pool.query(`
+        DO $$
+        BEGIN
+          IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='church_info' AND column_name='field_label_pastor') THEN
+            ALTER TABLE church_info
+              ADD COLUMN field_label_pastor VARCHAR(100) DEFAULT 'Pastor',
+              ADD COLUMN field_label_address VARCHAR(100) DEFAULT 'Address',
+              ADD COLUMN field_label_phone VARCHAR(100) DEFAULT 'Phone',
+              ADD COLUMN field_label_email VARCHAR(100) DEFAULT 'Email',
+              ADD COLUMN field_label_website VARCHAR(100) DEFAULT 'Website',
+              ADD COLUMN field_label_facebook VARCHAR(100) DEFAULT 'Facebook',
+              ADD COLUMN facebook VARCHAR(255),
+              ADD COLUMN show_members_link BOOLEAN DEFAULT false;
+          END IF;
+        END$$;
+      `);
+    } catch (err) {
+      console.log('Field labels columns may already exist:', err.message);
+    }
 
     const result = await pool.query(`
       UPDATE church_info SET
@@ -360,17 +389,25 @@ app.put('/api/admin/church-info', authenticateToken, requireSuperAdmin, async (r
         pastor_name = $7, pastor_phone = $8, pastor_email = $9, pastor_bio = $10,
         sunday_service_time = $11, wednesday_service_time = $12, other_service_times = $13,
         description = $14, mission_statement = $15, background_color = $16,
+        facebook = $17, show_members_link = $18,
+        field_label_pastor = $19, field_label_address = $20, field_label_phone = $21,
+        field_label_email = $22, field_label_website = $23, field_label_facebook = $24,
         updated_at = NOW()
       WHERE id = 1
       RETURNING *
     `, [name, address, phone, email, website, logo_url,
         pastor_name, pastor_phone, pastor_email, pastor_bio,
         sunday_service_time, wednesday_service_time, other_service_times,
-        description, mission_statement, background_color || '#3b82f6']);
+        description, mission_statement, background_color || '#3b82f6',
+        facebook, show_members_link !== undefined ? show_members_link : false,
+        field_label_pastor || 'Pastor', field_label_address || 'Address',
+        field_label_phone || 'Phone', field_label_email || 'Email',
+        field_label_website || 'Website', field_label_facebook || 'Facebook']);
 
     await logAudit(req.user.username, 'UPDATE', 'church_info', 1, null, result.rows[0], req.ip);
     res.json(result.rows[0]);
   } catch (error) {
+    console.error('Error updating church info:', error);
     res.status(500).json({ error: error.message });
   }
 });

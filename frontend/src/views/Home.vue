@@ -15,19 +15,22 @@
             <!-- Church Information -->
             <div v-if="hasChurchInfo()" class="church-info-grid">
               <div v-if="churchInfo.pastor_name">
-                <strong>Pastor:</strong> {{ churchInfo.pastor_name }}
+                <strong>{{ churchInfo.field_label_pastor || 'Pastor' }}:</strong> {{ churchInfo.pastor_name }}
               </div>
               <div v-if="churchInfo.address">
-                <strong>Address:</strong> {{ churchInfo.address }}
+                <strong>{{ churchInfo.field_label_address || 'Address' }}:</strong> {{ churchInfo.address }}
               </div>
               <div v-if="churchInfo.phone">
-                <strong>Phone:</strong> {{ churchInfo.phone }}
+                <strong>{{ churchInfo.field_label_phone || 'Phone' }}:</strong> {{ churchInfo.phone }}
               </div>
               <div v-if="churchInfo.email">
-                <strong>Email:</strong> {{ churchInfo.email }}
+                <strong>{{ churchInfo.field_label_email || 'Email' }}:</strong> {{ churchInfo.email }}
               </div>
               <div v-if="churchInfo.website">
-                <strong>Website:</strong> <a :href="churchInfo.website" target="_blank">{{ churchInfo.website }}</a>
+                <strong>{{ churchInfo.field_label_website || 'Website' }}:</strong> <a :href="churchInfo.website" target="_blank">{{ churchInfo.website }}</a>
+              </div>
+              <div v-if="churchInfo.facebook">
+                <strong>{{ churchInfo.field_label_facebook || 'Facebook' }}:</strong> <a :href="churchInfo.facebook" target="_blank">{{ churchInfo.facebook }}</a>
               </div>
             </div>
           </div>

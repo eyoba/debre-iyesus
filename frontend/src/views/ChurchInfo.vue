@@ -375,9 +375,20 @@ export default {
             other_service_times: response.data.other_service_times || '',
             pastor_bio: response.data.pastor_bio || '',
             mission_statement: response.data.mission_statement || '',
-            background_color: response.data.background_color || '#3b82f6'
+            background_color: response.data.background_color || '#3b82f6',
+            facebook: response.data.facebook || '',
+            show_members_link: response.data.show_members_link || false
+          }
+          this.fieldLabels = {
+            pastor_name: response.data.field_label_pastor || 'Pastor',
+            address: response.data.field_label_address || 'Address',
+            phone: response.data.field_label_phone || 'Phone',
+            email: response.data.field_label_email || 'Email',
+            website: response.data.field_label_website || 'Website',
+            facebook: response.data.field_label_facebook || 'Facebook'
           }
           this.originalChurch = { ...this.church }
+          this.originalLabels = { ...this.fieldLabels }
         }
       } catch (err) {
         if (err.response?.status === 401) {
@@ -409,9 +420,20 @@ export default {
           return
         }
 
+        // Combine church data with field labels
+        const churchData = {
+          ...this.church,
+          field_label_pastor: this.fieldLabels.pastor_name,
+          field_label_address: this.fieldLabels.address,
+          field_label_phone: this.fieldLabels.phone,
+          field_label_email: this.fieldLabels.email,
+          field_label_website: this.fieldLabels.website,
+          field_label_facebook: this.fieldLabels.facebook
+        }
+
         await axios.put(
           `${API_URL}/admin/church-info`,
-          this.church,
+          churchData,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -422,6 +444,7 @@ export default {
 
         this.successMessage = 'Church information updated successfully!'
         this.originalChurch = { ...this.church }
+        this.originalLabels = { ...this.fieldLabels }
 
         // Clear success message after 5 seconds
         setTimeout(() => {

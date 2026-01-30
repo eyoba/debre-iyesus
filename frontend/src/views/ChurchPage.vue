@@ -257,11 +257,21 @@ export default {
         facebook: 'Facebook'
       }
 
-      if (this.church && this.church.field_labels) {
-        const labels = typeof this.church.field_labels === 'string'
-          ? JSON.parse(this.church.field_labels)
-          : this.church.field_labels
-        return labels[fieldName] || defaultLabels[fieldName]
+      // Map field names to their label columns
+      const labelMapping = {
+        pastor_name: 'field_label_pastor',
+        address: 'field_label_address',
+        phone: 'field_label_phone',
+        email: 'field_label_email',
+        website: 'field_label_website',
+        facebook: 'field_label_facebook'
+      }
+
+      if (this.church) {
+        const labelColumn = labelMapping[fieldName]
+        if (labelColumn && this.church[labelColumn]) {
+          return this.church[labelColumn]
+        }
       }
 
       return defaultLabels[fieldName]
