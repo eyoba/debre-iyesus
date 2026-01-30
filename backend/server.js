@@ -4,6 +4,7 @@ const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { SmsClient } = require('@azure/communication-sms');
+const { BlobServiceClient } = require('@azure/storage-blob');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const multer = require('multer');
@@ -89,6 +90,31 @@ if (process.env.AZURE_COMMUNICATION_CONNECTION_STRING &&
   }
 } else {
   console.log('⚠️  Azure Communication Services not configured - SMS features disabled');
+}
+
+// Azure Blob Storage Client (for file uploads)
+let blobServiceClient = null;
+let containerClient = null;
+if (process.env.AZURE_STORAGE_CONNECTION_STRING &&
+    !process.env.AZURE_STORAGE_CONNECTION_STRING.includes('your_storage_connection_string_here')) {
+  try {
+    blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
+    const containerName = process.env.AZURE_STORAGE_CONTAINER_NAME || 'uploads';
+    containerClient = blobServiceClient.getContainerClient(containerName);
+
+    // Create container if it doesn't exist (with public blob access)
+    containerClient.createIfNotExists({ access: 'blob' }).then(() => {
+      console.log('✅ Azure Blob Storage client initialized');
+      console.log(`📦 Container: ${containerName}`);
+    }).catch(err => {
+      console.log('⚠️  Azure Blob Storage container creation warning:', err.message);
+    });
+  } catch (err) {
+    console.log('⚠️  Azure Blob Storage initialization failed:', err.message);
+    console.log('⚠️  File uploads will use local storage');
+  }
+} else {
+  console.log('⚠️  Azure Blob Storage not configured - using local file storage');
 }
 
 // File upload configuration
@@ -419,17 +445,40 @@ const uploadChurchLogo = async (req, res) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    const fs = require('fs');
-    const uploadsDir = path.join(__dirname, 'public', 'uploads');
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir, { recursive: true });
-    }
-
     const fileName = `logo-${Date.now()}${path.extname(req.file.originalname)}`;
-    const filePath = path.join(uploadsDir, fileName);
-    fs.writeFileSync(filePath, req.file.buffer);
+    let logoUrl;
 
-    const logoUrl = `${getBaseUrl(req)}/uploads/${fileName}`;
+    // Upload to Azure Blob Storage if configured, otherwise use local storage
+    if (containerClient) {
+      try {
+        const blockBlobClient = containerClient.getBlockBlobClient(fileName);
+
+        // Set content type based on file extension
+        const contentType = req.file.mimetype || 'image/jpeg';
+
+        await blockBlobClient.upload(req.file.buffer, req.file.buffer.length, {
+          blobHTTPHeaders: { blobContentType: contentType }
+        });
+
+        logoUrl = blockBlobClient.url;
+        console.log('✅ Logo uploaded to Azure Blob Storage:', logoUrl);
+      } catch (blobError) {
+        console.error('❌ Azure Blob Storage upload failed:', blobError.message);
+        throw new Error('Failed to upload to Azure Blob Storage: ' + blobError.message);
+      }
+    } else {
+      // Fallback to local storage
+      const fs = require('fs');
+      const uploadsDir = path.join(__dirname, 'public', 'uploads');
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+
+      const filePath = path.join(uploadsDir, fileName);
+      fs.writeFileSync(filePath, req.file.buffer);
+      logoUrl = `${getBaseUrl(req)}/uploads/${fileName}`;
+      console.log('⚠️  Logo uploaded to local storage:', logoUrl);
+    }
 
     await pool.query(`
       UPDATE church_info SET logo_url = $1, updated_at = NOW() WHERE id = 1
@@ -437,6 +486,7 @@ const uploadChurchLogo = async (req, res) => {
 
     res.json({ url: logoUrl, message: 'Logo uploaded successfully' });
   } catch (error) {
+    console.error('❌ Logo upload error:', error);
     res.status(500).json({ error: error.message });
   }
 };
