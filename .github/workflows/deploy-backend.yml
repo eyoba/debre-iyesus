@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: debre-iyesus-backend
+  AZURE_WEBAPP_NAME: debreiyesus-api
   NODE_VERSION: '18.x'
 
 jobs:

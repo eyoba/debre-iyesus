@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: debre-iyesus-frontend
+  AZURE_WEBAPP_NAME: debreiyesus
   NODE_VERSION: '18.x'
 
 jobs:
@@ -30,7 +30,7 @@ jobs:
     - name: Install dependencies and build
       working-directory: ./frontend
       env:
-        VITE_API_URL: https://debre-iyesus-backend.azurewebsites.net/api
+        VITE_API_URL: https://debreiyesus-api.azurewebsites.net/api
       run: |
         npm install
         npm run build
