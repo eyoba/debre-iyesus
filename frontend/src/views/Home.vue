@@ -30,7 +30,7 @@
                 <strong>{{ churchInfo.field_label_website || 'Website' }}:</strong> <a :href="churchInfo.website" target="_blank">{{ churchInfo.website }}</a>
               </div>
               <div v-if="churchInfo.facebook">
-                <strong>{{ churchInfo.field_label_facebook || 'Facebook' }}:</strong> <a :href="churchInfo.facebook" target="_blank">{{ churchInfo.facebook }}</a>
+                <strong>{{ churchInfo.field_label_facebook || 'Facebook' }}:</strong> <a :href="churchInfo.facebook" target="_blank">Visit Page</a>
               </div>
             </div>
           </div>
