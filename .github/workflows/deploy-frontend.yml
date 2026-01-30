@@ -35,12 +35,47 @@ jobs:
         npm install
         npm run build
 
+    - name: Prepare deployment package
+      run: |
+        cd frontend
+        cat > server.js << 'EOF'
+        const express = require('express');
+        const path = require('path');
+        const app = express();
+        const port = process.env.PORT || 8080;
+
+        app.use(express.static(path.join(__dirname, 'dist')));
+
+        app.get('*', (req, res) => {
+          res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+        });
+
+        app.listen(port, () => {
+          console.log(`Frontend server running on port ${port}`);
+        });
+        EOF
+
+        cat > package.json << 'EOF'
+        {
+          "name": "debreiyesus-frontend",
+          "version": "1.0.0",
+          "scripts": {
+            "start": "node server.js"
+          },
+          "dependencies": {
+            "express": "^4.18.2"
+          }
+        }
+        EOF
+
+        npm install --production
+
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v3
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.AZURE_FRONTEND_PUBLISH_PROFILE }}
-        package: ./frontend/dist
+        package: ./frontend
 
     - name: Deployment notification
       if: success()
