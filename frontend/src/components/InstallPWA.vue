@@ -3,11 +3,11 @@
     <div class="install-content">
       <div class="install-icon">📱</div>
       <div class="install-text">
-        <strong>Install Debre Iyesus Church App</strong>
-        <p>Install this app on your device for quick and easy access</p>
+        <strong v-html="promptTitle"></strong>
+        <p v-html="promptMessage"></p>
       </div>
       <div class="install-actions">
-        <button @click="installApp" class="btn btn-primary">Install</button>
+        <button @click="installApp" class="btn btn-primary">{{ installButtonText }}</button>
         <button @click="dismissPrompt" class="btn btn-secondary">Later</button>
       </div>
     </div>
@@ -20,16 +20,67 @@ export default {
   data() {
     return {
       deferredPrompt: null,
-      showInstallPrompt: false
+      showInstallPrompt: false,
+      isFirefox: false,
+      isIOS: false,
+      isStandalone: false,
+      promptTitle: 'Install Debre Iyesus Church App',
+      promptMessage: 'Install this app on your device for quick and easy access',
+      installButtonText: 'Install'
     }
   },
   mounted() {
-    // Listen for the beforeinstallprompt event
+    // Detect browser and device
+    this.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1
+    this.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
+    this.isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                        window.navigator.standalone === true
+
+    console.log('Browser Detection:', {
+      isFirefox: this.isFirefox,
+      isIOS: this.isIOS,
+      isStandalone: this.isStandalone
+    })
+
+    // Check if user dismissed recently
+    const dismissed = localStorage.getItem('pwa-install-dismissed')
+    if (dismissed) {
+      const dismissedTime = parseInt(dismissed)
+      const daysSinceDismissed = (Date.now() - dismissedTime) / (1000 * 60 * 60 * 24)
+      if (daysSinceDismissed < 7) {
+        return // Don't show if dismissed within last 7 days
+      }
+    }
+
+    // Show install prompt for iOS users if not already installed
+    if (this.isIOS && !this.isStandalone) {
+      console.log('iOS detected - showing install instructions')
+      this.promptTitle = 'Install on iOS'
+      this.promptMessage = 'Tap the Share button <svg style="display:inline;width:1em;height:1em;vertical-align:middle" viewBox="0 0 24 24" fill="currentColor"><path d="M16 5l-1.42 1.42-1.59-1.59V16h-1.98V4.83L9.42 6.42 8 5l4-4 4 4zm4 5v11c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V10c0-1.1.9-2 2-2h3v2H6v11h12V10h-3V8h3c1.1 0 2 .9 2 2z"/></svg> then "Add to Home Screen"'
+      this.installButtonText = 'Show Instructions'
+      this.showInstallPrompt = true
+    }
+    // Show install prompt for Firefox users if not already installed
+    else if (this.isFirefox && !this.isStandalone) {
+      console.log('Firefox detected - showing offline info')
+      setTimeout(() => {
+        this.promptTitle = 'This app works offline!'
+        this.promptMessage = 'Bookmark it for easy access.<br><small style="font-size:0.9em;">Note: Firefox desktop has limited PWA install support. Use Chrome/Edge for full install experience.</small>'
+        this.installButtonText = 'Install'
+        this.showInstallPrompt = true
+      }, 2000)
+    }
+
+    // Listen for the beforeinstallprompt event (Chrome, Edge, etc.)
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault()
       // Stash the event so it can be triggered later
       this.deferredPrompt = e
+      // Reset to default messages
+      this.promptTitle = 'Install Debre Iyesus Church App'
+      this.promptMessage = 'Install this app on your device for quick and easy access'
+      this.installButtonText = 'Install'
       // Show the install prompt
       this.showInstallPrompt = true
     })
@@ -43,20 +94,35 @@ export default {
   },
   methods: {
     async installApp() {
-      if (!this.deferredPrompt) {
-        return
+      if (this.deferredPrompt) {
+        // Standard PWA install (Chrome, Edge, etc.)
+        this.deferredPrompt.prompt()
+        const { outcome } = await this.deferredPrompt.userChoice
+        console.log(`User response to the install prompt: ${outcome}`)
+        this.deferredPrompt = null
+        this.showInstallPrompt = false
+      } else if (this.isIOS) {
+        // Show iOS installation instructions
+        alert('Install on iPhone/iPad:\n\n' +
+              '1. Tap the Share button (square with arrow) at the bottom of Safari\n' +
+              '2. Scroll down and tap "Add to Home Screen"\n' +
+              '3. Tap "Add" in the top right\n' +
+              '4. The app icon will appear on your home screen!\n\n' +
+              '✅ Works offline after installation\n' +
+              '✅ Full church management features')
+      } else if (this.isFirefox) {
+        // Show Firefox limitations and instructions
+        alert('Firefox Desktop PWA Support:\n\n' +
+              'Firefox desktop has limited PWA install support.\n\n' +
+              'Good news:\n' +
+              '✅ The app still works offline in Firefox!\n' +
+              '✅ Service Worker is active\n' +
+              '✅ All features work perfectly\n\n' +
+              'For full install experience:\n' +
+              '• Use Chrome or Edge on desktop\n' +
+              '• Or use Firefox on Android\n\n' +
+              'You can bookmark this page for quick access!')
       }
-
-      // Show the install prompt
-      this.deferredPrompt.prompt()
-
-      // Wait for the user to respond to the prompt
-      const { outcome } = await this.deferredPrompt.userChoice
-      console.log(`User response to the install prompt: ${outcome}`)
-
-      // Clear the deferredPrompt
-      this.deferredPrompt = null
-      this.showInstallPrompt = false
     },
     dismissPrompt() {
       this.showInstallPrompt = false
