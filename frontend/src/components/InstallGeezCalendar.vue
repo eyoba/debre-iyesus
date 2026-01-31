@@ -4,7 +4,6 @@
       <div class="install-icon">📅</div>
       <div class="install-text">
         <strong>Install Geez Calendar App</strong>
-        <p>Get the offline calendar app on your phone or desktop</p>
       </div>
       <div class="install-actions">
         <button @click="openCalendar" class="btn btn-primary">Install</button>

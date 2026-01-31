@@ -25,7 +25,7 @@ export default {
       isIOS: false,
       isStandalone: false,
       promptTitle: 'Install Debre Iyesus Church App',
-      promptMessage: 'Install this app on your device for quick and easy access',
+      promptMessage: '',
       installButtonText: 'Install'
     }
   },
@@ -60,7 +60,7 @@ export default {
       this.deferredPrompt = e
       // Reset to default messages
       this.promptTitle = 'Install Debre Iyesus Church App'
-      this.promptMessage = 'Install this app on your device for quick and easy access'
+      this.promptMessage = ''
       this.installButtonText = 'Install'
       // Show the install prompt
       this.showInstallPrompt = true
@@ -81,7 +81,7 @@ export default {
         // Only show if beforeinstallprompt didn't fire
         if (!this.deferredPrompt) {
           this.promptTitle = 'Install Debre Iyesus Church App'
-          this.promptMessage = 'Get the church management app on your device.<br><small style="font-size:0.9em;">Note: Firefox desktop has limited PWA install support. Use Chrome/Edge for full install experience.</small>'
+          this.promptMessage = ''
           this.installButtonText = 'Install'
           this.showInstallPrompt = true
         }
