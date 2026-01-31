@@ -45,22 +45,19 @@
           @click="activeSection = 'news'"
           :class="['quick-nav-item', { active: activeSection === 'news' }]"
         >
-          <span class="quick-nav-icon">📰</span>
-          <span class="quick-nav-text">News</span>
+          News
         </button>
         <button
           @click="activeSection = 'events'"
           :class="['quick-nav-item', { active: activeSection === 'events' }]"
         >
-          <span class="quick-nav-icon">📅</span>
-          <span class="quick-nav-text">Events</span>
+          Events
         </button>
         <button
           @click="activeSection = 'gallery'"
           :class="['quick-nav-item', { active: activeSection === 'gallery' }]"
         >
-          <span class="quick-nav-icon">📷</span>
-          <span class="quick-nav-text">Gallery</span>
+          Gallery
         </button>
       </div>
     </div>
@@ -334,24 +331,20 @@ export default {
 
 .quick-nav .container {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0;
 }
 
 .quick-nav-item {
-  flex: 1;
-  max-width: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   background: none;
   border: none;
   border-bottom: 3px solid transparent;
   color: var(--gray-700);
   cursor: pointer;
   transition: all 0.2s;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .quick-nav-item:hover {
@@ -365,15 +358,6 @@ export default {
   border-bottom-color: var(--primary-color);
   font-weight: 600;
   background: var(--gray-50);
-}
-
-.quick-nav-icon {
-  font-size: 1.5rem;
-}
-
-.quick-nav-text {
-  font-size: 0.875rem;
-  font-weight: 500;
 }
 
 .hero-content {
@@ -487,19 +471,12 @@ export default {
 
   .quick-nav .container {
     gap: 0;
+    justify-content: flex-start;
   }
 
   .quick-nav-item {
-    padding: 0.75rem 0.5rem;
-    max-width: none;
-  }
-
-  .quick-nav-icon {
-    font-size: 1.25rem;
-  }
-
-  .quick-nav-text {
-    font-size: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
   }
 
   .site-logo,
