@@ -52,25 +52,6 @@ export default {
       }
     }
 
-    // Show install prompt for iOS users if not already installed
-    if (this.isIOS && !this.isStandalone) {
-      console.log('iOS detected - showing install instructions')
-      this.promptTitle = 'Install on iOS'
-      this.promptMessage = 'Tap the Share button <svg style="display:inline;width:1em;height:1em;vertical-align:middle" viewBox="0 0 24 24" fill="currentColor"><path d="M16 5l-1.42 1.42-1.59-1.59V16h-1.98V4.83L9.42 6.42 8 5l4-4 4 4zm4 5v11c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V10c0-1.1.9-2 2-2h3v2H6v11h12V10h-3V8h3c1.1 0 2 .9 2 2z"/></svg> then "Add to Home Screen"'
-      this.installButtonText = 'Show Instructions'
-      this.showInstallPrompt = true
-    }
-    // Show install prompt for Firefox users if not already installed
-    else if (this.isFirefox && !this.isStandalone) {
-      console.log('Firefox detected - showing offline info')
-      setTimeout(() => {
-        this.promptTitle = 'This app works offline!'
-        this.promptMessage = 'Bookmark it for easy access.<br><small style="font-size:0.9em;">Note: Firefox desktop has limited PWA install support. Use Chrome/Edge for full install experience.</small>'
-        this.installButtonText = 'Install'
-        this.showInstallPrompt = true
-      }, 2000)
-    }
-
     // Listen for the beforeinstallprompt event (Chrome, Edge, etc.)
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
@@ -84,6 +65,28 @@ export default {
       // Show the install prompt
       this.showInstallPrompt = true
     })
+
+    // Show install prompt for iOS users if not already installed
+    if (this.isIOS && !this.isStandalone) {
+      console.log('iOS detected - showing install instructions')
+      this.promptTitle = 'Install on iOS'
+      this.promptMessage = 'Tap the Share button <svg style="display:inline;width:1em;height:1em;vertical-align:middle" viewBox="0 0 24 24" fill="currentColor"><path d="M16 5l-1.42 1.42-1.59-1.59V16h-1.98V4.83L9.42 6.42 8 5l4-4 4 4zm4 5v11c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V10c0-1.1.9-2 2-2h3v2H6v11h12V10h-3V8h3c1.1 0 2 .9 2 2z"/></svg> then "Add to Home Screen"'
+      this.installButtonText = 'Show Instructions'
+      this.showInstallPrompt = true
+    }
+    // Show install prompt for Firefox and other browsers if not already installed
+    else if ((this.isFirefox || !this.deferredPrompt) && !this.isStandalone) {
+      console.log('Firefox or non-Chromium browser detected - showing offline info')
+      setTimeout(() => {
+        // Only show if beforeinstallprompt didn't fire
+        if (!this.deferredPrompt) {
+          this.promptTitle = 'Install Debre Iyesus Church App'
+          this.promptMessage = 'Get the church management app on your device.<br><small style="font-size:0.9em;">Note: Firefox desktop has limited PWA install support. Use Chrome/Edge for full install experience.</small>'
+          this.installButtonText = 'Install'
+          this.showInstallPrompt = true
+        }
+      }, 2000)
+    }
 
     // Listen for app installed event
     window.addEventListener('appinstalled', () => {
@@ -139,10 +142,13 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  background: white;
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
   z-index: 1000;
   animation: slideUp 0.3s ease-out;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 @keyframes slideUp {
@@ -158,73 +164,75 @@ export default {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
   max-width: 800px;
   margin: 0 auto;
 }
 
 .install-icon {
-  font-size: 2.5rem;
+  font-size: 2rem;
   flex-shrink: 0;
 }
 
 .install-text {
   flex: 1;
+  text-align: center;
 }
 
 .install-text strong {
   display: block;
   margin-bottom: 0.25rem;
-  color: var(--gray-900);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .install-text p {
   margin: 0;
   font-size: 0.875rem;
-  color: var(--gray-600);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .install-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 10px;
   flex-shrink: 0;
 }
 
 .btn {
-  padding: 0.5rem 1rem;
+  padding: 10px 30px;
   border: none;
-  border-radius: 6px;
-  font-weight: 500;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: transform 0.2s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
 }
 
 .btn-primary {
-  background: var(--primary-color, #3b82f6);
-  color: white;
-}
-
-.btn-primary:hover {
-  background: var(--primary-hover, #2563eb);
+  background: white;
+  color: #667eea;
 }
 
 .btn-secondary {
-  background: var(--gray-200);
-  color: var(--gray-700);
-}
-
-.btn-secondary:hover {
-  background: var(--gray-300);
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 @media (max-width: 768px) {
   .install-content {
     flex-direction: column;
     text-align: center;
+    gap: 0.5rem;
   }
 
   .install-actions {
     width: 100%;
+    justify-content: center;
   }
 
   .install-actions button {
