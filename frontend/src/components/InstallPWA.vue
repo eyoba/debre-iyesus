@@ -85,7 +85,7 @@ export default {
           this.installButtonText = 'Install'
           this.showInstallPrompt = true
         }
-      }, 2000)
+      }, 500)
     }
 
     // Listen for app installed event
@@ -139,7 +139,7 @@ export default {
 <style scoped>
 .install-pwa-banner {
   position: fixed;
-  bottom: 0;
+  bottom: 95px; /* Position above the calendar PWA banner */
   left: 0;
   right: 0;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -224,6 +224,10 @@ export default {
 }
 
 @media (max-width: 768px) {
+  .install-pwa-banner {
+    bottom: 180px; /* More space on mobile */
+  }
+
   .install-content {
     flex-direction: column;
     text-align: center;

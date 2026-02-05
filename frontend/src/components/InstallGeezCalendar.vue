@@ -32,11 +32,11 @@ export default {
       }
     }
 
-    // Show the calendar install prompt after 4 seconds
-    // (to not conflict with the church PWA prompt at 2s)
+    // Show the calendar install prompt after 2 seconds
+    // (after the church PWA prompt shows first)
     setTimeout(() => {
       this.showPrompt = true
-    }, 4000)
+    }, 2000)
   },
   methods: {
     openCalendar() {
@@ -58,7 +58,7 @@ export default {
 <style scoped>
 .install-calendar-banner {
   position: fixed;
-  bottom: 95px; /* Position above the church PWA banner */
+  bottom: 0; /* Position at the bottom, below the church PWA banner */
   left: 0;
   right: 0;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -144,7 +144,7 @@ export default {
 
 @media (max-width: 768px) {
   .install-calendar-banner {
-    bottom: 180px; /* More space on mobile */
+    bottom: 0; /* Keep at bottom on mobile */
   }
 
   .install-content {
