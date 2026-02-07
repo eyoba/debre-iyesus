@@ -398,7 +398,7 @@ app.put('/api/admin/church-info', authenticateToken, requireSuperAdmin, async (r
       pastor_name, pastor_phone, pastor_email, pastor_bio,
       sunday_service_time, wednesday_service_time, other_service_times,
       description, mission_statement, background_color, show_members_link,
-      facebook, nav_title,
+      facebook, nav_title, about_content,
       field_label_pastor, field_label_address, field_label_phone,
       field_label_email, field_label_website, field_label_facebook
     } = req.body;
@@ -433,9 +433,9 @@ app.put('/api/admin/church-info', authenticateToken, requireSuperAdmin, async (r
         pastor_name = $7, pastor_phone = $8, pastor_email = $9, pastor_bio = $10,
         sunday_service_time = $11, wednesday_service_time = $12, other_service_times = $13,
         description = $14, mission_statement = $15, background_color = $16,
-        facebook = $17, show_members_link = $18, nav_title = $19,
-        field_label_pastor = $20, field_label_address = $21, field_label_phone = $22,
-        field_label_email = $23, field_label_website = $24, field_label_facebook = $25,
+        facebook = $17, show_members_link = $18, nav_title = $19, about_content = $20,
+        field_label_pastor = $21, field_label_address = $22, field_label_phone = $23,
+        field_label_email = $24, field_label_website = $25, field_label_facebook = $26,
         updated_at = NOW()
       WHERE id = 1
       RETURNING *
@@ -444,7 +444,7 @@ app.put('/api/admin/church-info', authenticateToken, requireSuperAdmin, async (r
         sunday_service_time, wednesday_service_time, other_service_times,
         description, mission_statement, background_color || '#3b82f6',
         facebook, show_members_link !== undefined ? show_members_link : false,
-        nav_title || 'Churches Directory',
+        nav_title || 'Churches Directory', about_content || '',
         field_label_pastor || 'Pastor', field_label_address || 'Address',
         field_label_phone || 'Phone', field_label_email || 'Email',
         field_label_website || 'Website', field_label_facebook || 'Facebook']);

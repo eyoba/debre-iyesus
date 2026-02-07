@@ -42,6 +42,12 @@
     <div class="quick-nav">
       <div class="container">
         <button
+          @click="activeSection = 'about'"
+          :class="['quick-nav-item', { active: activeSection === 'about' }]"
+        >
+          About
+        </button>
+        <button
           @click="activeSection = 'news'"
           :class="['quick-nav-item', { active: activeSection === 'news' }]"
         >
@@ -63,18 +69,28 @@
     </div>
 
     <div class="container">
-      <!-- Service Times -->
-      <div v-if="hasServiceTimes()" class="service-times">
-        <h2>Service Times</h2>
-        <div class="times-grid">
-          <div v-if="churchInfo.sunday_service_time" class="time-item">
-            <strong>Sunday Service:</strong> {{ churchInfo.sunday_service_time }}
-          </div>
-          <div v-if="churchInfo.wednesday_service_time" class="time-item">
-            <strong>Wednesday Service:</strong> {{ churchInfo.wednesday_service_time }}
-          </div>
-          <div v-if="churchInfo.other_service_times" class="time-item full-width">
-            <strong>Other Services:</strong> {{ churchInfo.other_service_times }}
+      <!-- About Section (Default) -->
+      <div v-if="activeSection === 'about'" class="section">
+        <div v-if="churchInfo.about_content" class="about-content card">
+          <div class="about-text" v-html="formatAboutContent(churchInfo.about_content)"></div>
+        </div>
+        <div v-else class="empty-state">
+          <p>No about information available. Please add content in the admin panel.</p>
+        </div>
+
+        <!-- Service Times -->
+        <div v-if="hasServiceTimes()" class="service-times">
+          <h2>Service Times</h2>
+          <div class="times-grid">
+            <div v-if="churchInfo.sunday_service_time" class="time-item">
+              <strong>Sunday Service:</strong> {{ churchInfo.sunday_service_time }}
+            </div>
+            <div v-if="churchInfo.wednesday_service_time" class="time-item">
+              <strong>Wednesday Service:</strong> {{ churchInfo.wednesday_service_time }}
+            </div>
+            <div v-if="churchInfo.other_service_times" class="time-item full-width">
+              <strong>Other Services:</strong> {{ churchInfo.other_service_times }}
+            </div>
           </div>
         </div>
       </div>
@@ -180,7 +196,7 @@ export default {
       news: [],
       events: [],
       photos: [],
-      activeSection: 'news',
+      activeSection: 'about',
       selectedPhoto: null,
       loading: true,
       error: null
@@ -265,6 +281,11 @@ export default {
       const ampm = hour >= 12 ? 'PM' : 'AM'
       const displayHour = hour % 12 || 12
       return `${displayHour}:${minutes} ${ampm}`
+    },
+    formatAboutContent(content) {
+      if (!content) return ''
+      // Convert line breaks to <br> tags and preserve formatting
+      return content.replace(/\n/g, '<br>')
     },
     openLightbox(photo) {
       this.selectedPhoto = photo
@@ -603,6 +624,23 @@ export default {
   .field-info-item strong {
     min-width: auto;
   }
+}
+
+/* About Section */
+.about-content {
+  margin: 2rem 0;
+  padding: 2rem;
+}
+
+.about-text {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--gray-700);
+  white-space: pre-wrap;
+}
+
+.about-text p {
+  margin-bottom: 1rem;
 }
 
 /* Geez Calendar Section */

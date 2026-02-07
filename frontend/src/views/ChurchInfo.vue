@@ -48,6 +48,18 @@
         </div>
 
         <div class="form-group">
+          <label for="about_content">About Page Content</label>
+          <textarea
+            id="about_content"
+            v-model="church.about_content"
+            placeholder="Write about your church, its history, mission, and vision..."
+            rows="8"
+            :disabled="saving"
+          ></textarea>
+          <small class="form-help">This content will appear on the About tab (home page)</small>
+        </div>
+
+        <div class="form-group">
           <label for="description">Description</label>
           <textarea
             id="description"
@@ -324,6 +336,7 @@ export default {
         name: '',
         description: '',
         nav_title: '',
+        about_content: '',
         pastor_name: '',
         address: '',
         phone: '',
@@ -384,6 +397,7 @@ export default {
             website: response.data.website || '',
             logo_url: response.data.logo_url || '',
             nav_title: response.data.nav_title || '',
+            about_content: response.data.about_content || '',
             sunday_service_time: response.data.sunday_service_time || '',
             wednesday_service_time: response.data.wednesday_service_time || '',
             other_service_times: response.data.other_service_times || '',
