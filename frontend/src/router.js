@@ -125,6 +125,12 @@ const routes = [
         name: 'AdminManagement',
         component: () => import('./views/AdminManagement.vue'),
         meta: { requiresAuth: true, requiresSuperAdmin: true }
+      },
+      {
+        path: 'change-password',
+        name: 'ChangePassword',
+        component: () => import('./views/ChangePassword.vue'),
+        meta: { requiresAuth: true }
       }
     ]
   }

@@ -15,6 +15,8 @@
           <router-link v-if="isSuperAdmin" to="/admin/members">Members</router-link>
           <router-link v-if="isSuperAdmin" to="/admin/send-sms">Send SMS</router-link>
           <router-link v-if="isSuperAdmin" to="/admin/kontingent">Kontingent</router-link>
+          <router-link v-if="isSuperAdmin" to="/admin/admins">Admin Management</router-link>
+          <router-link to="/admin/change-password">Change Password</router-link>
           <button @click="logout" class="btn btn-danger btn-sm">Logout</button>
         </div>
       </div>
