@@ -12,9 +12,9 @@
           <router-link to="/admin/news">News</router-link>
           <router-link to="/admin/events">Events</router-link>
           <router-link to="/admin/gallery">Gallery</router-link>
-          <router-link to="/admin/members">Members</router-link>
-          <router-link to="/admin/send-sms">Send SMS</router-link>
-          <router-link to="/admin/kontingent">Kontingent</router-link>
+          <router-link v-if="isSuperAdmin" to="/admin/members">Members</router-link>
+          <router-link v-if="isSuperAdmin" to="/admin/send-sms">Send SMS</router-link>
+          <router-link v-if="isSuperAdmin" to="/admin/kontingent">Kontingent</router-link>
           <button @click="logout" class="btn btn-danger btn-sm">Logout</button>
         </div>
       </div>
@@ -36,7 +36,8 @@ export default {
   data() {
     return {
       token: null,
-      siteLogo: ''
+      siteLogo: '',
+      isSuperAdmin: false
     }
   },
   computed: {
@@ -63,6 +64,15 @@ export default {
     },
     checkLogin() {
       this.token = localStorage.getItem('admin_token')
+      const user = localStorage.getItem('admin_user')
+      if (user) {
+        try {
+          const userData = JSON.parse(user)
+          this.isSuperAdmin = userData.is_super_admin || false
+        } catch (e) {
+          this.isSuperAdmin = false
+        }
+      }
       this.$forceUpdate()
     },
     logout() {

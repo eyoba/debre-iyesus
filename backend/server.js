@@ -699,8 +699,8 @@ app.delete('/api/admin/photos/:id', authenticateToken, async (req, res) => {
 // MEMBERS MANAGEMENT ROUTES
 // ============================================
 
-// Get all members
-app.get('/api/members', authenticateToken, async (req, res) => {
+// Get all members (superadmin only)
+app.get('/api/members', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const { search, active } = req.query;
 
@@ -730,8 +730,8 @@ app.get('/api/members', authenticateToken, async (req, res) => {
   }
 });
 
-// Get single member
-app.get('/api/members/:id', authenticateToken, async (req, res) => {
+// Get single member (superadmin only)
+app.get('/api/members/:id', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM members WHERE id = $1', [req.params.id]);
 
@@ -746,8 +746,8 @@ app.get('/api/members/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// Create member
-app.post('/api/members', authenticateToken, async (req, res) => {
+// Create member (superadmin only)
+app.post('/api/members', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const {
       full_name, phone_number, email, personnummer, card_number,
@@ -806,8 +806,8 @@ app.post('/api/members', authenticateToken, async (req, res) => {
   }
 });
 
-// Update member
-app.put('/api/members/:id', authenticateToken, async (req, res) => {
+// Update member (superadmin only)
+app.put('/api/members/:id', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const memberId = req.params.id;
 
@@ -868,8 +868,8 @@ app.put('/api/members/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// Delete member (soft delete)
-app.delete('/api/members/:id', authenticateToken, async (req, res) => {
+// Delete member (soft delete - superadmin only)
+app.delete('/api/members/:id', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const memberId = req.params.id;
 
@@ -894,8 +894,8 @@ app.delete('/api/members/:id', authenticateToken, async (req, res) => {
 // BAPTISM RECORDS ROUTES
 // ============================================
 
-// Get all baptism records
-app.get('/api/baptism-records', authenticateToken, async (req, res) => {
+// Get all baptism records (superadmin only)
+app.get('/api/baptism-records', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const { active } = req.query;
     let query = 'SELECT * FROM baptism_records';
@@ -917,7 +917,7 @@ app.get('/api/baptism-records', authenticateToken, async (req, res) => {
 });
 
 // Get single baptism record
-app.get('/api/baptism-records/:id', authenticateToken, async (req, res) => {
+app.get('/api/baptism-records/:id', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const result = await pool.query(
       'SELECT * FROM baptism_records WHERE id = $1',
@@ -936,7 +936,7 @@ app.get('/api/baptism-records/:id', authenticateToken, async (req, res) => {
 });
 
 // Create baptism record
-app.post('/api/baptism-records', authenticateToken, async (req, res) => {
+app.post('/api/baptism-records', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const {
       event_date, child_baptism_name, child_call_name, father_name,
@@ -975,7 +975,7 @@ app.post('/api/baptism-records', authenticateToken, async (req, res) => {
 });
 
 // Update baptism record
-app.put('/api/baptism-records/:id', authenticateToken, async (req, res) => {
+app.put('/api/baptism-records/:id', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const recordId = req.params.id;
 
@@ -1027,7 +1027,7 @@ app.put('/api/baptism-records/:id', authenticateToken, async (req, res) => {
 });
 
 // Delete baptism record (soft delete)
-app.delete('/api/baptism-records/:id', authenticateToken, async (req, res) => {
+app.delete('/api/baptism-records/:id', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const recordId = req.params.id;
 
@@ -1184,7 +1184,7 @@ app.delete('/api/admins/:id', authenticateToken, requireSuperAdmin, async (req, 
 // SMS ROUTES
 // ============================================
 
-app.post('/api/sms/send', authenticateToken, async (req, res) => {
+app.post('/api/sms/send', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const { member_ids, message } = req.body;
 
@@ -1276,7 +1276,7 @@ app.post('/api/sms/send', authenticateToken, async (req, res) => {
 });
 
 // Get SMS logs
-app.get('/api/sms/logs', authenticateToken, async (req, res) => {
+app.get('/api/sms/logs', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const { page = 1, limit = 50 } = req.query;
     const offset = (page - 1) * limit;
@@ -1309,7 +1309,7 @@ app.get('/api/sms/logs', authenticateToken, async (req, res) => {
 });
 
 // Get SMS statistics
-app.get('/api/sms/stats', authenticateToken, async (req, res) => {
+app.get('/api/sms/stats', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT
@@ -1330,7 +1330,7 @@ app.get('/api/sms/stats', authenticateToken, async (req, res) => {
 // KONTINGENT (MEMBERSHIP FEES) ROUTES
 // ============================================
 
-app.get('/api/kontingent/:month', authenticateToken, async (req, res) => {
+app.get('/api/kontingent/:month', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const { month } = req.params;
 
@@ -1359,7 +1359,7 @@ app.get('/api/kontingent/:month', authenticateToken, async (req, res) => {
   }
 });
 
-app.post('/api/kontingent/update', authenticateToken, async (req, res) => {
+app.post('/api/kontingent/update', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const { memberId, month, paid, amount, notes } = req.body;
 
