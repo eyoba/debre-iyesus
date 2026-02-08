@@ -38,39 +38,9 @@
       </div>
     </div>
 
-    <!-- Quick Navigation -->
-    <div class="quick-nav">
-      <div class="container">
-        <button
-          @click="activeSection = 'about'"
-          :class="['quick-nav-item', { active: activeSection === 'about' }]"
-        >
-          About
-        </button>
-        <button
-          @click="activeSection = 'news'"
-          :class="['quick-nav-item', { active: activeSection === 'news' }]"
-        >
-          News
-        </button>
-        <button
-          @click="activeSection = 'events'"
-          :class="['quick-nav-item', { active: activeSection === 'events' }]"
-        >
-          Events
-        </button>
-        <button
-          @click="activeSection = 'gallery'"
-          :class="['quick-nav-item', { active: activeSection === 'gallery' }]"
-        >
-          Gallery
-        </button>
-      </div>
-    </div>
-
     <div class="container">
-      <!-- About Section (Default) -->
-      <div v-if="activeSection === 'about'" class="section">
+      <!-- About Section (Always Visible) -->
+      <div class="section about-section">
         <div v-if="churchInfo.about_content" class="about-content card">
           <div class="about-text" v-html="formatAboutContent(churchInfo.about_content)"></div>
         </div>
@@ -93,6 +63,28 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Quick Navigation -->
+      <div class="quick-nav">
+        <button
+          @click="activeSection = 'news'"
+          :class="['quick-nav-item', { active: activeSection === 'news' }]"
+        >
+          News
+        </button>
+        <button
+          @click="activeSection = 'events'"
+          :class="['quick-nav-item', { active: activeSection === 'events' }]"
+        >
+          Events
+        </button>
+        <button
+          @click="activeSection = 'gallery'"
+          :class="['quick-nav-item', { active: activeSection === 'gallery' }]"
+        >
+          Gallery
+        </button>
       </div>
 
       <!-- News Section -->
@@ -196,15 +188,15 @@ export default {
       news: [],
       events: [],
       photos: [],
-      activeSection: 'about',
+      activeSection: 'news',
       selectedPhoto: null,
       loading: true,
       error: null
     }
   },
   async mounted() {
-    // Always reset to About section when component mounts
-    this.activeSection = 'about'
+    // Default to News section when component mounts
+    this.activeSection = 'news'
     await Promise.all([
       this.fetchChurchInfo(),
       this.fetchNews(),
@@ -215,8 +207,8 @@ export default {
   },
   watch: {
     '$route'() {
-      // Reset to About section when navigating to Home
-      this.activeSection = 'about'
+      // Reset to News section when navigating to Home
+      this.activeSection = 'news'
     }
   },
   methods: {
