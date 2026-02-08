@@ -203,6 +203,8 @@ export default {
     }
   },
   async mounted() {
+    // Always reset to About section when component mounts
+    this.activeSection = 'about'
     await Promise.all([
       this.fetchChurchInfo(),
       this.fetchNews(),
@@ -210,6 +212,12 @@ export default {
       this.fetchPhotos()
     ])
     this.loading = false
+  },
+  watch: {
+    '$route'() {
+      // Reset to About section when navigating to Home
+      this.activeSection = 'about'
+    }
   },
   methods: {
     async fetchChurchInfo() {
