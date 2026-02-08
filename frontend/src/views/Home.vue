@@ -199,12 +199,16 @@ export default {
   async mounted() {
     // Default to About section (empty activeSection) when component mounts
     this.activeSection = ''
-    await Promise.all([
-      this.fetchChurchInfo(),
-      this.fetchNews(),
-      this.fetchEvents(),
-      this.fetchPhotos()
-    ])
+
+    // Fetch data sequentially with small delays to avoid rate limiting
+    await this.fetchChurchInfo()
+    await new Promise(resolve => setTimeout(resolve, 100))
+    await this.fetchNews()
+    await new Promise(resolve => setTimeout(resolve, 100))
+    await this.fetchEvents()
+    await new Promise(resolve => setTimeout(resolve, 100))
+    await this.fetchPhotos()
+
     this.loading = false
 
     // Listen for custom reset-home event
@@ -231,6 +235,9 @@ export default {
         this.churchInfo = response.data
       } catch (err) {
         console.error('Error fetching church info:', err)
+        if (err.response?.status === 429) {
+          console.warn('Rate limited - church info temporarily unavailable')
+        }
       }
     },
     async fetchNews() {
@@ -239,6 +246,10 @@ export default {
         this.news = response.data
       } catch (err) {
         console.error('Error fetching news:', err)
+        if (err.response?.status === 429) {
+          console.warn('Rate limited - news temporarily unavailable')
+          this.news = []
+        }
       }
     },
     async fetchEvents() {
@@ -247,6 +258,11 @@ export default {
         this.events = response.data
       } catch (err) {
         console.error('Error fetching events:', err)
+        // If rate limited (429), silently handle - data will show as empty
+        if (err.response?.status === 429) {
+          console.warn('Rate limited - events temporarily unavailable')
+          this.events = []
+        }
       }
     },
     async fetchPhotos() {
@@ -255,6 +271,10 @@ export default {
         this.photos = response.data
       } catch (err) {
         console.error('Error fetching photos:', err)
+        if (err.response?.status === 429) {
+          console.warn('Rate limited - photos temporarily unavailable')
+          this.photos = []
+        }
       }
     },
     hasChurchInfo() {
