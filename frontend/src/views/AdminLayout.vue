@@ -49,6 +49,18 @@ export default {
     this.checkLogin()
     this.fetchChurchInfo()
     window.addEventListener('storage', this.checkLogin)
+
+    // Also check role immediately on mount
+    const user = localStorage.getItem('admin_user')
+    if (user) {
+      try {
+        const userData = JSON.parse(user)
+        this.isSuperAdmin = userData.is_super_admin || false
+        console.log('Admin role check:', { isSuperAdmin: this.isSuperAdmin, userData })
+      } catch (e) {
+        this.isSuperAdmin = false
+      }
+    }
   },
   beforeUnmount() {
     window.removeEventListener('storage', this.checkLogin)
