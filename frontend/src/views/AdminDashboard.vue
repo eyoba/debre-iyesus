@@ -14,7 +14,7 @@
     <div v-else>
       <!-- Stats Cards -->
       <div class="stats-grid grid grid-3">
-        <div class="stat-card card">
+        <div v-if="isSuperAdmin" class="stat-card card">
           <div class="stat-icon members-icon">👥</div>
           <div class="stat-content">
             <h3>{{ stats.members || 0 }}</h3>
@@ -22,7 +22,7 @@
           </div>
         </div>
 
-        <div class="stat-card card">
+        <div v-if="isSuperAdmin" class="stat-card card">
           <div class="stat-icon adults-icon">👨‍👩‍👧‍👦</div>
           <div class="stat-content">
             <h3>{{ stats.members_18_plus || 0 }}</h3>
@@ -30,7 +30,7 @@
           </div>
         </div>
 
-        <div class="stat-card card">
+        <div v-if="isSuperAdmin" class="stat-card card">
           <div class="stat-icon children-icon">👶</div>
           <div class="stat-content">
             <h3>{{ stats.members_under_18 || 0 }}</h3>
@@ -67,19 +67,19 @@
       <div class="quick-actions mt-4">
         <h2 class="mb-3">Quick Actions</h2>
         <div class="grid grid-3">
-          <router-link to="/admin/members" class="action-card card">
+          <router-link v-if="isSuperAdmin" to="/admin/members" class="action-card card">
             <div class="action-icon">📋</div>
             <h3>Se alle medlemmer</h3>
             <p>Vis, søk og filtrer medlemslisten</p>
           </router-link>
 
-          <router-link to="/admin/members/add" class="action-card card">
+          <router-link v-if="isSuperAdmin" to="/admin/members/add" class="action-card card">
             <div class="action-icon">➕</div>
             <h3>Legg til medlem</h3>
             <p>Registrer nytt medlem i systemet</p>
           </router-link>
 
-          <router-link to="/admin/baptism" class="action-card card">
+          <router-link v-if="isSuperAdmin" to="/admin/baptism" class="action-card card">
             <div class="action-icon">✝️</div>
             <h3>ናይ ክርስትና/ጥምቀት መዝገብ</h3>
             <p>መዝገብ ጥምቀት ኣርእዩን ኣመሓድሩን</p>
@@ -109,7 +109,7 @@
             <p>Upload photos and manage your church gallery</p>
           </router-link>
 
-          <router-link to="/admin/send-sms" class="action-card card">
+          <router-link v-if="isSuperAdmin" to="/admin/send-sms" class="action-card card">
             <div class="action-icon">📱</div>
             <h3>Send SMS</h3>
             <p>Send messages to church members</p>
@@ -196,6 +196,10 @@ export default {
     userName() {
       const user = JSON.parse(localStorage.getItem('admin_user') || '{}')
       return user.full_name || user.username || 'Admin'
+    },
+    isSuperAdmin() {
+      const user = JSON.parse(localStorage.getItem('admin_user') || '{}')
+      return user.is_super_admin || false
     }
   },
   async mounted() {
