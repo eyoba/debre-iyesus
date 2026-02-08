@@ -12,7 +12,7 @@
           <button v-if="showCalendarInstall" @click="installCalendarApp" class="install-btn calendar-install">
             📅 Calendar
           </button>
-          <router-link to="/">Home</router-link>
+          <a href="/" @click.prevent="goHome" style="cursor: pointer; color: inherit; text-decoration: none;">Home</a>
           <router-link to="/admin/login" class="btn btn-primary btn-sm">Admin Login</router-link>
         </div>
       </div>
@@ -139,6 +139,14 @@ export default {
       // Open the Geez Calendar PWA in a new tab
       window.open('https://eyoba.github.io/geez-calendar-pwa/', '_blank')
       localStorage.setItem('calendar-install-dismissed', Date.now())
+    },
+    goHome() {
+      // Emit custom event to reset home page to default state
+      window.dispatchEvent(new CustomEvent('reset-home'))
+      // Navigate to home if not already there
+      if (this.$route.path !== '/') {
+        this.$router.push('/')
+      }
     }
   }
 }

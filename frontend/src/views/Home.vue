@@ -206,6 +206,13 @@ export default {
       this.fetchPhotos()
     ])
     this.loading = false
+
+    // Listen for custom reset-home event
+    window.addEventListener('reset-home', this.resetToAbout)
+  },
+  beforeUnmount() {
+    // Clean up event listener
+    window.removeEventListener('reset-home', this.resetToAbout)
   },
   watch: {
     '$route'() {
@@ -214,6 +221,10 @@ export default {
     }
   },
   methods: {
+    resetToAbout() {
+      // Reset to About section (empty activeSection)
+      this.activeSection = ''
+    },
     async fetchChurchInfo() {
       try {
         const response = await axios.get(`${API_URL}/church`)
