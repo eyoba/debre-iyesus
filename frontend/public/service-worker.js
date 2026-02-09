@@ -1,5 +1,5 @@
 // IMPORTANT: Increment version number when deploying updates to force cache refresh
-const CACHE_VERSION = 9;
+const CACHE_VERSION = 10;
 const CACHE_NAME = `debre-iyesus-v${CACHE_VERSION}`;
 const API_CACHE_NAME = `debre-iyesus-api-v${CACHE_VERSION}`;
 

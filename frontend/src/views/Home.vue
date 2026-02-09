@@ -200,13 +200,13 @@ export default {
     // Default to About section (empty activeSection) when component mounts
     this.activeSection = ''
 
-    // Fetch data sequentially with small delays to avoid rate limiting
+    // Fetch data sequentially with longer delays to avoid rate limiting
     await this.fetchChurchInfo()
-    await new Promise(resolve => setTimeout(resolve, 100))
+    await new Promise(resolve => setTimeout(resolve, 500))
     await this.fetchNews()
-    await new Promise(resolve => setTimeout(resolve, 100))
+    await new Promise(resolve => setTimeout(resolve, 500))
     await this.fetchEvents()
-    await new Promise(resolve => setTimeout(resolve, 100))
+    await new Promise(resolve => setTimeout(resolve, 500))
     await this.fetchPhotos()
 
     this.loading = false
@@ -229,57 +229,62 @@ export default {
       // Reset to About section (empty activeSection)
       this.activeSection = ''
     },
+    async fetchWithRetry(url, retries = 2, delay = 2000) {
+      for (let i = 0; i <= retries; i++) {
+        try {
+          const response = await axios.get(url)
+          return response.data
+        } catch (err) {
+          if (err.response?.status === 429 && i < retries) {
+            // Rate limited - wait and retry
+            console.info(`⏱️ Rate limited - retrying in ${delay}ms...`)
+            await new Promise(resolve => setTimeout(resolve, delay))
+            delay *= 2 // Exponential backoff
+          } else if (err.response?.status === 429) {
+            // Final retry failed
+            console.info('⏱️ Rate limited - please refresh page in a moment')
+            throw err
+          } else {
+            throw err
+          }
+        }
+      }
+    },
     async fetchChurchInfo() {
       try {
-        const response = await axios.get(`${API_URL}/church`)
-        this.churchInfo = response.data
+        this.churchInfo = await this.fetchWithRetry(`${API_URL}/church`)
       } catch (err) {
-        if (err.response?.status === 429) {
-          // Rate limited - silently handle, keep existing data or show default
-          console.info('⏱️ Rate limited - church info will be available shortly')
-        } else {
+        if (err.response?.status !== 429) {
           console.error('Error fetching church info:', err)
         }
       }
     },
     async fetchNews() {
       try {
-        const response = await axios.get(`${API_URL}/news`)
-        this.news = response.data
+        this.news = await this.fetchWithRetry(`${API_URL}/news`)
       } catch (err) {
-        if (err.response?.status === 429) {
-          // Rate limited - silently handle by showing empty news
-          console.info('⏱️ Rate limited - news will be available shortly')
-          this.news = []
-        } else {
+        this.news = []
+        if (err.response?.status !== 429) {
           console.error('Error fetching news:', err)
         }
       }
     },
     async fetchEvents() {
       try {
-        const response = await axios.get(`${API_URL}/events`)
-        this.events = response.data
+        this.events = await this.fetchWithRetry(`${API_URL}/events`)
       } catch (err) {
-        if (err.response?.status === 429) {
-          // Rate limited - silently handle by showing empty events
-          console.info('⏱️ Rate limited - events will be available shortly')
-          this.events = []
-        } else {
+        this.events = []
+        if (err.response?.status !== 429) {
           console.error('Error fetching events:', err)
         }
       }
     },
     async fetchPhotos() {
       try {
-        const response = await axios.get(`${API_URL}/photos`)
-        this.photos = response.data
+        this.photos = await this.fetchWithRetry(`${API_URL}/photos`)
       } catch (err) {
-        if (err.response?.status === 429) {
-          // Rate limited - silently handle by showing empty photos
-          console.info('⏱️ Rate limited - photos will be available shortly')
-          this.photos = []
-        } else {
+        this.photos = []
+        if (err.response?.status !== 429) {
           console.error('Error fetching photos:', err)
         }
       }

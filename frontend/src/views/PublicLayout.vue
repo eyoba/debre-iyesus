@@ -63,10 +63,15 @@ export default {
   methods: {
     async fetchSiteSettings() {
       try {
+        // Try to fetch, but don't retry if rate limited (not critical)
         const response = await axios.get(`${API_URL}/church`)
         this.navTitle = response.data.nav_title || ''
       } catch (err) {
-        console.error('Error fetching site settings:', err)
+        if (err.response?.status === 429) {
+          console.info('⏱️ Rate limited - using default navigation title')
+        } else {
+          console.error('Error fetching site settings:', err)
+        }
       }
     },
     initializePWAInstall() {
