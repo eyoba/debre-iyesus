@@ -1,5 +1,7 @@
-const CACHE_NAME = 'debre-iyesus-v1';
-const API_CACHE_NAME = 'debre-iyesus-api-v1';
+// IMPORTANT: Increment version number when deploying updates to force cache refresh
+const CACHE_VERSION = 8;
+const CACHE_NAME = `debre-iyesus-v${CACHE_VERSION}`;
+const API_CACHE_NAME = `debre-iyesus-api-v${CACHE_VERSION}`;
 
 // Files to cache for offline access
 const STATIC_CACHE_URLS = [

@@ -53,6 +53,12 @@ export default {
     this.initializePWAInstall()
     // Fetch site settings in parallel
     this.fetchSiteSettings()
+
+    // Add keyboard shortcut: Ctrl+Shift+R to force clear cache
+    window.addEventListener('keydown', this.handleCacheClearShortcut)
+  },
+  beforeUnmount() {
+    window.removeEventListener('keydown', this.handleCacheClearShortcut)
   },
   methods: {
     async fetchSiteSettings() {
@@ -137,6 +143,52 @@ export default {
       // Navigate to home if not already there
       if (this.$route.path !== '/') {
         this.$router.push('/')
+      }
+    },
+    handleCacheClearShortcut(event) {
+      // Ctrl+Shift+Delete: Clear all caches and reload
+      if (event.ctrlKey && event.shiftKey && event.key === 'Delete') {
+        event.preventDefault()
+        if (confirm('Clear all caches and reload the app?\n\nThis will:\n- Delete all cached data\n- Unregister service workers\n- Clear local storage\n- Reload the page')) {
+          this.clearAllCaches()
+        }
+      }
+    },
+    async clearAllCaches() {
+      try {
+        // Clear all caches
+        if ('caches' in window) {
+          const cacheNames = await caches.keys()
+          await Promise.all(cacheNames.map(name => caches.delete(name)))
+          console.log('✅ All caches cleared')
+        }
+
+        // Unregister all service workers
+        if ('serviceWorker' in navigator) {
+          const registrations = await navigator.serviceWorker.getRegistrations()
+          await Promise.all(registrations.map(reg => reg.unregister()))
+          console.log('✅ All service workers unregistered')
+        }
+
+        // Clear localStorage (but preserve admin token if exists)
+        const adminToken = localStorage.getItem('admin_token')
+        const adminUser = localStorage.getItem('admin_user')
+        localStorage.clear()
+        sessionStorage.clear()
+
+        // Restore admin session if it existed
+        if (adminToken) {
+          localStorage.setItem('admin_token', adminToken)
+          localStorage.setItem('admin_user', adminUser)
+        }
+
+        console.log('✅ Storage cleared')
+
+        // Force hard reload
+        window.location.reload(true)
+      } catch (error) {
+        console.error('Error clearing caches:', error)
+        alert('Failed to clear caches. Please try manually clearing browser data.')
       }
     }
   }

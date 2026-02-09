@@ -14,16 +14,41 @@
   <div id="app"></div>
   <script type="module" src="/src/main.js"></script>
   <script>
-    // Register service worker
+    // Register service worker with automatic update detection
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/service-worker.js')
           .then((registration) => {
             console.log('Service Worker registered successfully:', registration.scope);
+
+            // Check for updates every 60 seconds
+            setInterval(() => {
+              registration.update();
+            }, 60000);
+
+            // Listen for updates
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              console.log('Service Worker: Update found, installing new version...');
+
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('Service Worker: New version installed, reloading page...');
+                  // New service worker installed, reload to get latest content
+                  window.location.reload();
+                }
+              });
+            });
           })
           .catch((error) => {
             console.log('Service Worker registration failed:', error);
           });
+      });
+
+      // Handle service worker controller change (when new SW takes over)
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        console.log('Service Worker: Controller changed, reloading page...');
+        window.location.reload();
       });
     }
   </script>
