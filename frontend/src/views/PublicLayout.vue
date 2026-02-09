@@ -48,9 +48,11 @@ export default {
       isStandalone: false
     }
   },
-  async mounted() {
-    await this.fetchSiteSettings()
+  mounted() {
+    // Initialize PWA install buttons immediately (don't wait for API)
     this.initializePWAInstall()
+    // Fetch site settings in parallel
+    this.fetchSiteSettings()
   },
   methods: {
     async fetchSiteSettings() {
