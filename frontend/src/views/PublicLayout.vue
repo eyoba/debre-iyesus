@@ -68,7 +68,10 @@ export default {
       this.isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
                           window.navigator.standalone === true
 
-      // Don't show install buttons if already installed
+      // Always show calendar button (it's just a link to external calendar site)
+      this.showCalendarInstall = true
+
+      // Don't show church install button if already installed as PWA
       if (this.isStandalone) {
         return
       }
@@ -77,12 +80,6 @@ export default {
       const churchDismissed = localStorage.getItem('pwa-install-dismissed')
       if (!churchDismissed || this.shouldShowAgain(churchDismissed)) {
         this.showChurchInstall = true
-      }
-
-      // Check if user dismissed calendar install recently
-      const calendarDismissed = localStorage.getItem('calendar-install-dismissed')
-      if (!calendarDismissed || this.shouldShowAgain(calendarDismissed)) {
-        this.showCalendarInstall = true
       }
 
       // Listen for beforeinstallprompt event (Chrome, Edge, etc.)
@@ -138,7 +135,7 @@ export default {
     installCalendarApp() {
       // Open the Geez Calendar PWA in a new tab
       window.open('https://eyoba.github.io/geez-calendar-pwa/', '_blank')
-      localStorage.setItem('calendar-install-dismissed', Date.now())
+      // Don't dismiss - keep button visible so users can access calendar anytime
     },
     goHome() {
       // Emit custom event to reset home page to default state
