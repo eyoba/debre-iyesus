@@ -234,9 +234,11 @@ export default {
         const response = await axios.get(`${API_URL}/church`)
         this.churchInfo = response.data
       } catch (err) {
-        console.error('Error fetching church info:', err)
         if (err.response?.status === 429) {
-          console.warn('Rate limited - church info temporarily unavailable')
+          // Rate limited - silently handle, keep existing data or show default
+          console.info('⏱️ Rate limited - church info will be available shortly')
+        } else {
+          console.error('Error fetching church info:', err)
         }
       }
     },
@@ -245,10 +247,12 @@ export default {
         const response = await axios.get(`${API_URL}/news`)
         this.news = response.data
       } catch (err) {
-        console.error('Error fetching news:', err)
         if (err.response?.status === 429) {
-          console.warn('Rate limited - news temporarily unavailable')
+          // Rate limited - silently handle by showing empty news
+          console.info('⏱️ Rate limited - news will be available shortly')
           this.news = []
+        } else {
+          console.error('Error fetching news:', err)
         }
       }
     },
@@ -257,11 +261,12 @@ export default {
         const response = await axios.get(`${API_URL}/events`)
         this.events = response.data
       } catch (err) {
-        console.error('Error fetching events:', err)
-        // If rate limited (429), silently handle - data will show as empty
         if (err.response?.status === 429) {
-          console.warn('Rate limited - events temporarily unavailable')
+          // Rate limited - silently handle by showing empty events
+          console.info('⏱️ Rate limited - events will be available shortly')
           this.events = []
+        } else {
+          console.error('Error fetching events:', err)
         }
       }
     },
@@ -270,10 +275,12 @@ export default {
         const response = await axios.get(`${API_URL}/photos`)
         this.photos = response.data
       } catch (err) {
-        console.error('Error fetching photos:', err)
         if (err.response?.status === 429) {
-          console.warn('Rate limited - photos temporarily unavailable')
+          // Rate limited - silently handle by showing empty photos
+          console.info('⏱️ Rate limited - photos will be available shortly')
           this.photos = []
+        } else {
+          console.error('Error fetching photos:', err)
         }
       }
     },

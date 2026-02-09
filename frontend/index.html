@@ -21,10 +21,10 @@
           .then((registration) => {
             console.log('Service Worker registered successfully:', registration.scope);
 
-            // Check for updates every 60 seconds
+            // Check for updates every 5 minutes (reduced to avoid rate limiting)
             setInterval(() => {
               registration.update();
-            }, 60000);
+            }, 300000);
 
             // Listen for updates
             registration.addEventListener('updatefound', () => {
