@@ -71,16 +71,9 @@ export default {
       // Always show calendar button (it's just a link to external calendar site)
       this.showCalendarInstall = true
 
-      // Don't show church install button if already installed as PWA
-      if (this.isStandalone) {
-        return
-      }
-
-      // Check if user dismissed church install recently
-      const churchDismissed = localStorage.getItem('pwa-install-dismissed')
-      if (!churchDismissed || this.shouldShowAgain(churchDismissed)) {
-        this.showChurchInstall = true
-      }
+      // Always show church install button (even if already installed)
+      // This allows users to reinstall/update the app
+      this.showChurchInstall = true
 
       // Listen for beforeinstallprompt event (Chrome, Edge, etc.)
       window.addEventListener('beforeinstallprompt', (e) => {
@@ -89,9 +82,8 @@ export default {
         this.showChurchInstall = true
       })
 
-      // Listen for app installed event
+      // Don't hide install button after installation - keep it visible for updates
       window.addEventListener('appinstalled', () => {
-        this.showChurchInstall = false
         this.deferredPrompt = null
       })
     },
