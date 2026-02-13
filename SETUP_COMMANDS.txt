@@ -1,0 +1,84 @@
+=======================================================
+AZURE NEW SUBSCRIPTION - SETUP COMMANDS
+=======================================================
+
+Copy and paste these commands into Azure Cloud Shell (Bash)
+
+=======================================================
+STEP 1: CREATE DATABASE
+=======================================================
+
+az postgres flexible-server db create \
+  --resource-group rg-debre-iyesus \
+  --server-name debre-iyesus-db \
+  --database-name debre_iyesus_db
+
+=======================================================
+STEP 2: CONFIGURE FIREWALL (Allow Azure Services)
+=======================================================
+
+az postgres flexible-server firewall-rule create \
+  --resource-group rg-debre-iyesus \
+  --name debre-iyesus-db \
+  --rule-name AllowAzureServices \
+  --start-ip-address 0.0.0.0 \
+  --end-ip-address 0.0.0.0
+
+=======================================================
+STEP 3: SET BLOB STORAGE PUBLIC ACCESS
+=======================================================
+
+az storage container set-permission \
+  --name church-logo \
+  --public-access blob \
+  --account-name debreiyesuschurchstorage
+
+=======================================================
+STEP 4: GET STORAGE CONNECTION STRING
+=======================================================
+
+az storage account show-connection-string \
+  --name debreiyesuschurchstorage \
+  --resource-group rg-debre-iyesus \
+  --output tsv
+
+** IMPORTANT: SAVE THE OUTPUT FROM THIS COMMAND! **
+You'll need it for the backend app configuration.
+
+=======================================================
+OPTIONAL: Allow Your Local IP (for testing)
+=======================================================
+
+# First, get your current IP address
+curl ifconfig.me
+
+# Then add it (replace YOUR_IP with actual IP from above)
+az postgres flexible-server firewall-rule create \
+  --resource-group rg-debre-iyesus \
+  --name debre-iyesus-db \
+  --rule-name AllowMyIP \
+  --start-ip-address YOUR_IP \
+  --end-ip-address YOUR_IP
+
+=======================================================
+VERIFICATION COMMANDS
+=======================================================
+
+# List all databases on the server
+az postgres flexible-server db list \
+  --resource-group rg-debre-iyesus \
+  --server-name debre-iyesus-db \
+  --output table
+
+# Check firewall rules
+az postgres flexible-server firewall-rule list \
+  --resource-group rg-debre-iyesus \
+  --name debre-iyesus-db \
+  --output table
+
+# Verify blob container
+az storage container show \
+  --name church-logo \
+  --account-name debreiyesuschurchstorage
+
+=======================================================

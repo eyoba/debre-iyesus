@@ -1,0 +1,61 @@
+=======================================================
+BACKEND APP SERVICE ENVIRONMENT VARIABLES
+=======================================================
+
+Azure Portal → debre-iyesus-api → Configuration → Application settings
+
+Click "+ New application setting" for each of these:
+
+=======================================================
+
+NAME: DATABASE_URL
+VALUE: postgresql://debreiyesus_db_church_use:Bergen-db2011@debre-iyesus-db.postgres.database.azure.com:5432/debre_iyesus_db?sslmode=require
+
+---
+
+NAME: PORT
+VALUE: 8080
+
+---
+
+NAME: NODE_ENV
+VALUE: production
+
+---
+
+NAME: FRONTEND_URLS
+VALUE: https://debre-iyesus.azurewebsites.net,https://www.debreiyesus.no,https://debreiyesus.no
+
+---
+
+NAME: JWT_SECRET
+VALUE: a162f03ac7b69bfedd64e4ff4c2e82dec6727a01a52d934bd44db5126ea504b71054c1085012f287335eae511d7ee6104a5dab32ed86607b5d3b4de785342558
+
+---
+
+NAME: AZURE_STORAGE_CONNECTION_STRING
+VALUE: [PASTE THE CONNECTION STRING FROM STEP 4 OF SETUP_COMMANDS.txt]
+
+---
+
+NAME: AZURE_STORAGE_CONTAINER_NAME
+VALUE: church-logo
+
+=======================================================
+AFTER ADDING ALL SETTINGS:
+=======================================================
+
+1. Click "Save" at the top
+2. Click "Continue" when warned about restart
+
+=======================================================
+STARTUP COMMAND
+=======================================================
+
+Configuration → General settings → Startup Command:
+
+node server.js
+
+Click "Save"
+
+=======================================================
