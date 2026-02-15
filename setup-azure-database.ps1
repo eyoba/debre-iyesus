@@ -8,7 +8,7 @@ Write-Host ""
 
 # Create temporary .env file
 $envContent = @"
-DATABASE_URL=postgresql://debreiyesus_db_church_use:Bergen-db2011@debre-iyesus-db.postgres.database.azure.com:5432/debre_iyesus_db?sslmode=require
+DATABASE_URL=postgresql://debreiyesus_db_church_user:Bergen-db2011@debre-iyesus-db.postgres.database.azure.com:5432/debre_iyesus_db?sslmode=require
 PORT=3010
 NODE_ENV=development
 "@
