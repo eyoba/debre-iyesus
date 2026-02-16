@@ -843,7 +843,7 @@ app.post('/api/members', authenticateToken, requireSuperAdmin, async (req, res) 
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $12)
       RETURNING id
     `, [
-      full_name, phone_number, email || null, personnummer, card_number || null,
+      full_name, phone_number, email || null, personnummer || null, card_number || null,
       address || null, postal_code || null, city || null, card_issue_date || null,
       sms_consent !== undefined ? sms_consent : true,
       notes || null, req.user.username
@@ -906,7 +906,7 @@ app.put('/api/members/:id', authenticateToken, requireSuperAdmin, async (req, re
         updated_at = NOW()
       WHERE id = $14
     `, [
-      full_name, phone_number, email || null, personnummer, card_number || null,
+      full_name, phone_number, email || null, personnummer || null, card_number || null,
       address || null, postal_code || null, city || null, card_issue_date || null,
       sms_consent !== undefined ? sms_consent : true,
       is_active !== undefined ? is_active : true, notes || null,
