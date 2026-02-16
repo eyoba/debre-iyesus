@@ -15,6 +15,9 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3010;
 
+// Trust proxy for Azure App Service
+app.set('trust proxy', 1);
+
 // Helper function to get base URL
 const getBaseUrl = (req) => {
   if (process.env.BACKEND_URL) {
