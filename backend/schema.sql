@@ -31,6 +31,24 @@ CREATE TABLE IF NOT EXISTS church_info (
     logo_url VARCHAR(500),
     background_color VARCHAR(20) DEFAULT '#3b82f6',
 
+    -- Social media
+    facebook VARCHAR(255),
+
+    -- Navigation and content
+    nav_title VARCHAR(255) DEFAULT 'Churches Directory',
+    about_content TEXT,
+
+    -- Customizable field labels
+    field_label_pastor VARCHAR(100) DEFAULT 'Pastor',
+    field_label_address VARCHAR(100) DEFAULT 'Address',
+    field_label_phone VARCHAR(100) DEFAULT 'Phone',
+    field_label_email VARCHAR(100) DEFAULT 'Email',
+    field_label_website VARCHAR(100) DEFAULT 'Website',
+    field_label_facebook VARCHAR(100) DEFAULT 'Facebook',
+
+    -- Display options
+    show_members_link BOOLEAN DEFAULT false,
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
