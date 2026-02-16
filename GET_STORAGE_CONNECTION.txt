@@ -1,0 +1,34 @@
+========================================================
+GET AZURE STORAGE CONNECTION STRING
+========================================================
+
+Option 1: Azure Portal (Easiest)
+--------------------------------
+1. Go to Azure Portal
+2. Navigate to your storage account: debreiyesuschurchstorage
+3. Click "Access keys" in the left menu
+4. Under "key1", click "Show" next to "Connection string"
+5. Click the copy icon to copy the full connection string
+6. It will look like:
+   DefaultEndpointsProtocol=https;AccountName=debreiyesuschurchstorage;AccountKey=...;EndpointSuffix=core.windows.net
+
+
+Option 2: Azure CLI Command
+----------------------------
+Run this command in your terminal:
+
+az storage account show-connection-string --name debreiyesuschurchstorage --resource-group rg-debre-iyesus --query connectionString --output tsv
+
+
+========================================================
+WHAT TO DO WITH IT
+========================================================
+
+Copy the connection string and use it as the value for:
+AZURE_STORAGE_CONNECTION_STRING
+
+in both:
+- Backend App Service configuration (Step 4)
+- BACKEND_ENV_SETTINGS.txt (for reference)
+
+========================================================

@@ -52,18 +52,17 @@
           </div>
 
           <div class="form-group">
-            <label for="personnummer">Personnummer (11 siffer) *</label>
+            <label for="personnummer">Personnummer (11 siffer)</label>
             <input
               type="text"
               id="personnummer"
               v-model="formData.personnummer"
-              placeholder="DDMMYYXXXXX"
+              placeholder="DDMMYYXXXXX (valgfritt)"
               maxlength="11"
               pattern="\d{11}"
-              required
               :disabled="isSubmitting"
             />
-            <small class="form-hint">Sensitiv informasjon - behandles konfidensielt</small>
+            <small class="form-hint">Valgfritt - Sensitiv informasjon behandles konfidensielt</small>
           </div>
 
           <div class="form-row">

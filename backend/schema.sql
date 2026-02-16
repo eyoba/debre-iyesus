@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS members (
     full_name VARCHAR(200) NOT NULL,
     phone_number VARCHAR(20) NOT NULL,
     email VARCHAR(100),
-    personnummer VARCHAR(11) NOT NULL,
+    personnummer VARCHAR(11), -- Optional - can be NULL
     member_number VARCHAR(50) UNIQUE,
 
     -- Address
