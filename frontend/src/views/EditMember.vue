@@ -67,7 +67,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="card_number">Medlemskortnummer</label>
+              <label for="card_number">Medlemskortnummer (EROTCHDEID)</label>
               <input
                 type="text"
                 id="card_number"
