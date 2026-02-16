@@ -53,7 +53,6 @@
               v-model="formData.personnummer"
               placeholder="DDMMYYXXXXX (valgfritt)"
               maxlength="11"
-              pattern="\d{11}"
               :disabled="isSubmitting"
             />
             <small class="form-hint">Valgfritt - Sensitiv informasjon behandles konfidensielt</small>

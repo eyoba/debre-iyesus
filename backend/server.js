@@ -808,7 +808,8 @@ app.post('/api/members', authenticateToken, requireSuperAdmin, async (req, res) 
       sms_consent, notes
     } = req.body;
 
-    if (!/^\d{11}$/.test(personnummer)) {
+    // Validate personnummer only if provided
+    if (personnummer && !/^\d{11}$/.test(personnummer)) {
       return res.status(400).json({ error: 'Personnummer must be 11 digits' });
     }
 
