@@ -813,13 +813,16 @@ app.post('/api/members', authenticateToken, requireSuperAdmin, async (req, res) 
       return res.status(400).json({ error: 'Personnummer must be 11 digits' });
     }
 
-    const duplicateCheck = await pool.query(
-      'SELECT id FROM members WHERE phone_number = $1',
-      [phone_number]
-    );
+    // Check for duplicate phone number only if provided
+    if (phone_number) {
+      const duplicateCheck = await pool.query(
+        'SELECT id FROM members WHERE phone_number = $1',
+        [phone_number]
+      );
 
-    if (duplicateCheck.rows.length > 0) {
-      return res.status(400).json({ error: 'Member with this phone number already exists' });
+      if (duplicateCheck.rows.length > 0) {
+        return res.status(400).json({ error: 'Member with this phone number already exists' });
+      }
     }
 
     if (card_number) {
@@ -843,7 +846,7 @@ app.post('/api/members', authenticateToken, requireSuperAdmin, async (req, res) 
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $12)
       RETURNING id
     `, [
-      full_name, phone_number, email || null, personnummer || null, card_number || null,
+      full_name, phone_number || null, email || null, personnummer || null, card_number || null,
       address || null, postal_code || null, city || null, card_issue_date || null,
       sms_consent !== undefined ? sms_consent : true,
       notes || null, req.user.username
@@ -906,7 +909,7 @@ app.put('/api/members/:id', authenticateToken, requireSuperAdmin, async (req, re
         updated_at = NOW()
       WHERE id = $14
     `, [
-      full_name, phone_number, email || null, personnummer || null, card_number || null,
+      full_name, phone_number || null, email || null, personnummer || null, card_number || null,
       address || null, postal_code || null, city || null, card_issue_date || null,
       sms_consent !== undefined ? sms_consent : true,
       is_active !== undefined ? is_active : true, notes || null,
