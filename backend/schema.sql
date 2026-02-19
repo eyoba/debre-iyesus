@@ -137,6 +137,28 @@ CREATE TABLE IF NOT EXISTS members (
     updated_by VARCHAR(100)
 );
 
+-- Baptism/Christening records (ናይ ክርስትና/ጥምቀት መዝገብ)
+CREATE TABLE IF NOT EXISTS baptism_records (
+    id SERIAL PRIMARY KEY,
+    event_date DATE NOT NULL,
+    child_baptism_name VARCHAR(200) NOT NULL,
+    child_call_name VARCHAR(200),
+    father_name VARCHAR(200),
+    mother_name VARCHAR(200),
+    parents_nationality VARCHAR(100),
+    child_birth_date DATE,
+    child_baptism_date DATE,
+    godparent_name VARCHAR(200),
+    baptism_church VARCHAR(200),
+    priest_name VARCHAR(200),
+    notes TEXT,
+    is_active BOOLEAN DEFAULT true,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Kontingent (membership fees) tracking
 CREATE TABLE IF NOT EXISTS kontingent_payments (
     id SERIAL PRIMARY KEY,
@@ -196,6 +218,8 @@ CREATE INDEX IF NOT EXISTS idx_members_name ON members(full_name);
 CREATE INDEX IF NOT EXISTS idx_news_published ON news(is_published, published_date DESC);
 CREATE INDEX IF NOT EXISTS idx_events_date ON events(event_date);
 CREATE INDEX IF NOT EXISTS idx_photos_published ON photos(is_published, display_order);
+CREATE INDEX IF NOT EXISTS idx_baptism_records_active ON baptism_records(is_active);
+CREATE INDEX IF NOT EXISTS idx_baptism_records_date ON baptism_records(event_date DESC);
 CREATE INDEX IF NOT EXISTS idx_sms_logs_sent_at ON sms_logs(sent_at DESC);
 CREATE INDEX IF NOT EXISTS idx_audit_log_timestamp ON audit_log(timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_kontingent_month ON kontingent_payments(payment_month);
