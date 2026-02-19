@@ -925,7 +925,7 @@ app.put('/api/members/:id', authenticateToken, requireSuperAdmin, async (req, re
   }
 });
 
-// Delete member (soft delete - superadmin only)
+// Delete member (soft delete - mark as inactive - superadmin only)
 app.delete('/api/members/:id', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const memberId = req.params.id;
@@ -938,12 +938,46 @@ app.delete('/api/members/:id', authenticateToken, requireSuperAdmin, async (req,
       WHERE id = $2
     `, [req.user.username, memberId]);
 
-    await logAudit(req.user.username, 'DELETE', 'members', memberId, null, { is_active: false }, req.ip);
+    await logAudit(req.user.username, 'SOFT_DELETE', 'members', memberId, null, { is_active: false }, req.ip);
 
-    res.json({ message: 'Member deleted successfully' });
+    res.json({ message: 'Member marked as inactive' });
   } catch (err) {
-    console.error('Delete member error:', err);
-    res.status(500).json({ error: 'Failed to delete member' });
+    console.error('Soft delete member error:', err);
+    res.status(500).json({ error: 'Failed to mark member as inactive' });
+  }
+});
+
+// Permanent delete member (hard delete - only for inactive members - superadmin only)
+app.delete('/api/members/:id/permanent', authenticateToken, requireSuperAdmin, async (req, res) => {
+  try {
+    const memberId = req.params.id;
+
+    // First check if member is inactive
+    const checkResult = await pool.query(
+      'SELECT is_active, full_name FROM members WHERE id = $1',
+      [memberId]
+    );
+
+    if (checkResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Member not found' });
+    }
+
+    if (checkResult.rows[0].is_active) {
+      return res.status(400).json({ error: 'Can only permanently delete inactive members' });
+    }
+
+    // Get member data for audit log
+    const memberData = checkResult.rows[0];
+
+    // Permanently delete from database
+    await pool.query('DELETE FROM members WHERE id = $1', [memberId]);
+
+    await logAudit(req.user.username, 'PERMANENT_DELETE', 'members', memberId, memberData, null, req.ip);
+
+    res.json({ message: 'Member permanently deleted' });
+  } catch (err) {
+    console.error('Permanent delete member error:', err);
+    res.status(500).json({ error: 'Failed to permanently delete member' });
   }
 });
 

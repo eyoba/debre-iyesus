@@ -69,6 +69,11 @@ export default {
     return response.data
   },
 
+  async permanentDeleteMember(id) {
+    const response = await api.delete(`/members/${id}/permanent`)
+    return response.data
+  },
+
   // SMS Operations
   async sendSMS(data) {
     const response = await api.post('/sms/send', data)

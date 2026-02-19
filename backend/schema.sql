@@ -114,6 +114,7 @@ CREATE TABLE IF NOT EXISTS members (
     email VARCHAR(100),
     personnummer VARCHAR(11), -- Optional - can be NULL
     card_number VARCHAR(50) UNIQUE, -- Medlemskortnummer (EROTCHDEID)
+    card_issue_date DATE, -- Card issue date (Kortutstedelsesdato)
 
     -- Address
     address VARCHAR(500),

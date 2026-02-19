@@ -80,8 +80,11 @@
               <router-link :to="`/admin/members/edit/${member.id}`" class="btn btn-sm btn-primary">
                 Rediger
               </router-link>
-              <button @click="confirmDelete(member)" class="btn btn-sm btn-danger">
-                Slett
+              <button v-if="member.is_active" @click="confirmDeactivate(member)" class="btn btn-sm btn-warning">
+                Inaktiv
+              </button>
+              <button v-else @click="confirmPermanentDelete(member)" class="btn btn-sm btn-danger">
+                Slett permanent
               </button>
             </td>
           </tr>
@@ -89,16 +92,31 @@
       </table>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div v-if="showDeleteModal" class="modal-overlay" @click="showDeleteModal = false">
+    <!-- Deactivate Confirmation Modal -->
+    <div v-if="showDeactivateModal" class="modal-overlay" @click="showDeactivateModal = false">
       <div class="modal-content" @click.stop>
-        <h3>Bekreft sletting</h3>
-        <p>Er du sikker på at du vil slette <strong>{{ memberToDelete?.full_name }}</strong>?</p>
-        <p class="warning-text">Dette vil markere medlemmet som inaktivt.</p>
+        <h3>Bekreft inaktivering</h3>
+        <p>Er du sikker på at du vil markere <strong>{{ memberToDeactivate?.full_name }}</strong> som inaktiv?</p>
+        <p class="warning-text">Medlemmet vil bli skjult fra aktive medlemmer, men dataene beholdes i databasen.</p>
         <div class="modal-actions">
-          <button @click="showDeleteModal = false" class="btn btn-secondary">Avbryt</button>
-          <button @click="deleteMember" class="btn btn-danger" :disabled="isDeleting">
-            {{ isDeleting ? 'Sletter...' : 'Slett' }}
+          <button @click="showDeactivateModal = false" class="btn btn-secondary">Avbryt</button>
+          <button @click="deactivateMember" class="btn btn-warning" :disabled="isDeleting">
+            {{ isDeleting ? 'Inaktiverer...' : 'Marker som inaktiv' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Permanent Delete Confirmation Modal -->
+    <div v-if="showPermanentDeleteModal" class="modal-overlay" @click="showPermanentDeleteModal = false">
+      <div class="modal-content" @click.stop>
+        <h3>⚠️ Bekreft permanent sletting</h3>
+        <p>Er du sikker på at du vil <strong>permanent slette</strong> <strong>{{ memberToPermanentDelete?.full_name }}</strong>?</p>
+        <p class="warning-text-danger">⚠️ ADVARSEL: Dette vil permanent slette medlemmet fra databasen. Denne handlingen kan IKKE angres!</p>
+        <div class="modal-actions">
+          <button @click="showPermanentDeleteModal = false" class="btn btn-secondary">Avbryt</button>
+          <button @click="permanentDeleteMember" class="btn btn-danger" :disabled="isDeleting">
+            {{ isDeleting ? 'Sletter permanent...' : 'Slett permanent' }}
           </button>
         </div>
       </div>
@@ -119,8 +137,10 @@ export default {
       activeFilter: '',
       isLoading: true,
       errorMessage: '',
-      showDeleteModal: false,
-      memberToDelete: null,
+      showDeactivateModal: false,
+      showPermanentDeleteModal: false,
+      memberToDeactivate: null,
+      memberToPermanentDelete: null,
       isDeleting: false,
       showPersonnummer: false
     }
@@ -165,23 +185,45 @@ export default {
       )
     },
 
-    confirmDelete(member) {
-      this.memberToDelete = member
-      this.showDeleteModal = true
+    confirmDeactivate(member) {
+      this.memberToDeactivate = member
+      this.showDeactivateModal = true
     },
 
-    async deleteMember() {
-      if (!this.memberToDelete) return
+    confirmPermanentDelete(member) {
+      this.memberToPermanentDelete = member
+      this.showPermanentDeleteModal = true
+    },
+
+    async deactivateMember() {
+      if (!this.memberToDeactivate) return
 
       this.isDeleting = true
       try {
-        await membersService.deleteMember(this.memberToDelete.id)
+        await membersService.deleteMember(this.memberToDeactivate.id)
         await this.loadMembers()
-        this.showDeleteModal = false
-        this.memberToDelete = null
+        this.showDeactivateModal = false
+        this.memberToDeactivate = null
       } catch (error) {
-        console.error('Error deleting member:', error)
-        this.errorMessage = 'Kunne ikke slette medlem. Prøv igjen.'
+        console.error('Error deactivating member:', error)
+        this.errorMessage = 'Kunne ikke inaktivere medlem. Prøv igjen.'
+      } finally {
+        this.isDeleting = false
+      }
+    },
+
+    async permanentDeleteMember() {
+      if (!this.memberToPermanentDelete) return
+
+      this.isDeleting = true
+      try {
+        await membersService.permanentDeleteMember(this.memberToPermanentDelete.id)
+        await this.loadMembers()
+        this.showPermanentDeleteModal = false
+        this.memberToPermanentDelete = null
+      } catch (error) {
+        console.error('Error permanently deleting member:', error)
+        this.errorMessage = 'Kunne ikke slette medlem permanent. Prøv igjen.'
       } finally {
         this.isDeleting = false
       }
@@ -389,6 +431,25 @@ export default {
 .warning-text {
   color: var(--gray-600);
   font-size: 0.9rem;
+}
+
+.warning-text-danger {
+  color: #dc2626;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fee;
+  padding: 0.75rem;
+  border-radius: 4px;
+  border-left: 4px solid #dc2626;
+}
+
+.btn-warning {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.btn-warning:hover {
+  background-color: #d97706;
 }
 
 .modal-actions {
