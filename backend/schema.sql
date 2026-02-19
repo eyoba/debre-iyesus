@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS members (
     phone_number VARCHAR(20), -- Optional - can be NULL (e.g., children without phones)
     email VARCHAR(100),
     personnummer VARCHAR(11), -- Optional - can be NULL
-    member_number VARCHAR(50) UNIQUE,
+    card_number VARCHAR(50) UNIQUE, -- Medlemskortnummer (EROTCHDEID)
 
     -- Address
     address VARCHAR(500),
