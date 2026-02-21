@@ -51,6 +51,32 @@
             </div>
           </div>
 
+          <div class="form-row">
+            <div class="form-group">
+              <label for="baptism_name">ስም ጥምቀት (ክርስትና)</label>
+              <input
+                type="text"
+                id="baptism_name"
+                v-model="formData.baptism_name"
+                placeholder="Baptism/Christening name (valgfritt)"
+                maxlength="200"
+                :disabled="isSubmitting"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="godparent_name">ስም ኣቦ ንስሓ</label>
+              <input
+                type="text"
+                id="godparent_name"
+                v-model="formData.godparent_name"
+                placeholder="Godparent name (valgfritt)"
+                maxlength="200"
+                :disabled="isSubmitting"
+              />
+            </div>
+          </div>
+
           <div class="form-group">
             <label for="personnummer">Personnummer (11 siffer)</label>
             <input
@@ -193,6 +219,8 @@ export default {
     return {
       formData: {
         full_name: '',
+        baptism_name: '',
+        godparent_name: '',
         phone_number: '',
         email: '',
         personnummer: '',

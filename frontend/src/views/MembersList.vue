@@ -38,6 +38,8 @@
         <thead>
           <tr>
             <th>Navn</th>
+            <th>ስም ጥምቀት</th>
+            <th>ስም ኣቦ ንስሓ</th>
             <th>Telefon</th>
             <th>
               Personnummer
@@ -59,6 +61,8 @@
         <tbody>
           <tr v-for="member in filteredMembers" :key="member.id">
             <td class="member-name">{{ member.full_name }}</td>
+            <td>{{ member.baptism_name || '-' }}</td>
+            <td>{{ member.godparent_name || '-' }}</td>
             <td>{{ member.phone_number }}</td>
             <td class="personnummer">
               {{ showPersonnummer ? formatPersonnummer(member.personnummer) : 'xxxxx-xxxxx' }}

@@ -803,7 +803,7 @@ app.get('/api/members/:id', authenticateToken, requireSuperAdmin, async (req, re
 app.post('/api/members', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const {
-      full_name, phone_number, email, personnummer, card_number,
+      full_name, baptism_name, godparent_name, phone_number, email, personnummer, card_number,
       address, postal_code, city, card_issue_date,
       sms_consent, notes
     } = req.body;
@@ -838,15 +838,15 @@ app.post('/api/members', authenticateToken, requireSuperAdmin, async (req, res) 
 
     const result = await pool.query(`
       INSERT INTO members (
-        full_name, phone_number, email, personnummer, card_number,
+        full_name, baptism_name, godparent_name, phone_number, email, personnummer, card_number,
         address, postal_code, city, card_issue_date,
         sms_consent, notes,
         created_by, updated_by
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $12)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $14)
       RETURNING id
     `, [
-      full_name, phone_number || null, email || null, personnummer || null, card_number || null,
+      full_name, baptism_name || null, godparent_name || null, phone_number || null, email || null, personnummer || null, card_number || null,
       address || null, postal_code || null, city || null, card_issue_date || null,
       sms_consent !== undefined ? sms_consent : true,
       notes || null, req.user.username
@@ -875,7 +875,7 @@ app.put('/api/members/:id', authenticateToken, requireSuperAdmin, async (req, re
     }
 
     const {
-      full_name, phone_number, email, personnummer, card_number,
+      full_name, baptism_name, godparent_name, phone_number, email, personnummer, card_number,
       address, postal_code, city, card_issue_date,
       sms_consent, is_active, notes
     } = req.body;
@@ -894,22 +894,24 @@ app.put('/api/members/:id', authenticateToken, requireSuperAdmin, async (req, re
     await pool.query(`
       UPDATE members SET
         full_name = $1,
-        phone_number = $2,
-        email = $3,
-        personnummer = $4,
-        card_number = $5,
-        address = $6,
-        postal_code = $7,
-        city = $8,
-        card_issue_date = $9,
-        sms_consent = $10,
-        is_active = $11,
-        notes = $12,
-        updated_by = $13,
+        baptism_name = $2,
+        godparent_name = $3,
+        phone_number = $4,
+        email = $5,
+        personnummer = $6,
+        card_number = $7,
+        address = $8,
+        postal_code = $9,
+        city = $10,
+        card_issue_date = $11,
+        sms_consent = $12,
+        is_active = $13,
+        notes = $14,
+        updated_by = $15,
         updated_at = NOW()
-      WHERE id = $14
+      WHERE id = $16
     `, [
-      full_name, phone_number || null, email || null, personnummer || null, card_number || null,
+      full_name, baptism_name || null, godparent_name || null, phone_number || null, email || null, personnummer || null, card_number || null,
       address || null, postal_code || null, city || null, card_issue_date || null,
       sms_consent !== undefined ? sms_consent : true,
       is_active !== undefined ? is_active : true, notes || null,
