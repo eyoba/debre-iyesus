@@ -29,30 +29,6 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="phone_number">Mobilnummer</label>
-              <input
-                type="tel"
-                id="phone_number"
-                v-model="formData.phone_number"
-                placeholder="+47 xxx xx xxx"
-                :disabled="isSubmitting"
-              />
-              <small class="form-hint">Valgfritt - barn uten mobil kan hoppes over</small>
-            </div>
-
-            <div class="form-group">
-              <label for="email">E-post</label>
-              <input
-                type="email"
-                id="email"
-                v-model="formData.email"
-                :disabled="isSubmitting"
-              />
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
               <label for="baptism_name">ስም ጥምቀት (ክርስትና)</label>
               <input
                 type="text"
@@ -148,6 +124,30 @@
                 type="text"
                 id="city"
                 v-model="formData.city"
+                :disabled="isSubmitting"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone_number">Mobilnummer</label>
+              <input
+                type="tel"
+                id="phone_number"
+                v-model="formData.phone_number"
+                placeholder="+47 xxx xx xxx"
+                :disabled="isSubmitting"
+              />
+              <small class="form-hint">Valgfritt - barn uten mobil kan hoppes over</small>
+            </div>
+
+            <div class="form-group">
+              <label for="email">E-post</label>
+              <input
+                type="email"
+                id="email"
+                v-model="formData.email"
                 :disabled="isSubmitting"
               />
             </div>
