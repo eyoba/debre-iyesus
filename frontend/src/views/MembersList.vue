@@ -38,7 +38,7 @@
         <thead>
           <tr>
             <th>Navn</th>
-            <th>ስም ጥምቀት</th>
+            <th>ስም ክርስትና</th>
             <th>ስም ኣቦ ንስሓ</th>
             <th>Telefon</th>
             <th>

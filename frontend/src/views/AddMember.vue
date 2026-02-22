@@ -23,7 +23,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="baptism_name">ስም ጥምቀት (ክርስትና)</label>
+              <label for="baptism_name">ስም ክርስትና (dåpsnavn)</label>
               <input
                 type="text"
                 id="baptism_name"

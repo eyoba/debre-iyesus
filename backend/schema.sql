@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS members (
     id SERIAL PRIMARY KEY,
     -- Personal Information
     full_name VARCHAR(200) NOT NULL,
-    baptism_name VARCHAR(200), -- ስም ጥምቀት (ክርስትና) - Baptism/Christening name
+    baptism_name VARCHAR(200), -- ስም ክርስትና (dåpsnavn) - Baptism/Christening name
     godparent_name VARCHAR(200), -- ስም ኣቦ ንስሓ - Godfather/Godparent name
     phone_number VARCHAR(20), -- Optional - can be NULL (e.g., children without phones)
     email VARCHAR(100),
