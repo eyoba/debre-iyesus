@@ -1,5 +1,5 @@
 // IMPORTANT: Increment version number when deploying updates to force cache refresh
-const CACHE_VERSION = 10;
+const CACHE_VERSION = 11;
 const CACHE_NAME = `debre-iyesus-v${CACHE_VERSION}`;
 const API_CACHE_NAME = `debre-iyesus-api-v${CACHE_VERSION}`;
 
@@ -91,15 +91,22 @@ self.addEventListener('fetch', (event) => {
         }
 
         return fetch(request).then((response) => {
-          // Cache successful responses
-          if (response.ok) {
+          // Only cache same-origin successful responses
+          if (response.ok && url.origin === location.origin) {
             const responseClone = response.clone();
             caches.open(CACHE_NAME).then((cache) => {
               cache.put(request, responseClone);
+            }).catch((err) => {
+              console.warn('Failed to cache:', request.url, err);
             });
           }
           return response;
         });
+      })
+      .catch((error) => {
+        console.error('Service Worker fetch error:', error);
+        // Network fetch failed, just pass through
+        return fetch(request);
       })
   );
 });
