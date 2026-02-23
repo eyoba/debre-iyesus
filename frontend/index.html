@@ -14,35 +14,68 @@
   <div id="app"></div>
   <script type="module" src="/src/main.js"></script>
   <script>
-    // Register service worker with automatic update detection
+    // Service worker error recovery and registration
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then((registration) => {
-            console.log('Service Worker registered successfully:', registration.scope);
+      // Detect if we're having service worker issues
+      let swErrorDetected = false;
 
-            // Check for updates every 5 minutes (reduced to avoid rate limiting)
-            setInterval(() => {
-              registration.update();
-            }, 300000);
+      window.addEventListener('error', (event) => {
+        if (event.message && event.message.includes('ServiceWorker')) {
+          console.error('Service Worker error detected, will attempt recovery');
+          swErrorDetected = true;
+        }
+      });
 
-            // Listen for updates
-            registration.addEventListener('updatefound', () => {
-              const newWorker = registration.installing;
-              console.log('Service Worker: Update found, installing new version...');
+      window.addEventListener('load', async () => {
+        try {
+          // If we detected SW errors, unregister all service workers first
+          if (swErrorDetected) {
+            console.log('Unregistering problematic service workers...');
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (let registration of registrations) {
+              await registration.unregister();
+            }
+            console.log('All service workers unregistered, reloading...');
+            window.location.reload();
+            return;
+          }
 
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  console.log('Service Worker: New version installed, reloading page...');
-                  // New service worker installed, reload to get latest content
-                  window.location.reload();
-                }
-              });
+          // Normal service worker registration
+          const registration = await navigator.serviceWorker.register('/service-worker.js');
+          console.log('Service Worker registered successfully:', registration.scope);
+
+          // Check for updates every 5 minutes (reduced to avoid rate limiting)
+          setInterval(() => {
+            registration.update();
+          }, 300000);
+
+          // Listen for updates
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            console.log('Service Worker: Update found, installing new version...');
+
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('Service Worker: New version installed, reloading page...');
+                // New service worker installed, reload to get latest content
+                window.location.reload();
+              }
             });
-          })
-          .catch((error) => {
-            console.log('Service Worker registration failed:', error);
           });
+        } catch (error) {
+          console.log('Service Worker registration failed:', error);
+          // If registration fails, try to unregister and reload
+          try {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (let registration of registrations) {
+              await registration.unregister();
+            }
+            console.log('Unregistered failed service worker, reloading...');
+            window.location.reload();
+          } catch (e) {
+            console.error('Could not unregister service worker:', e);
+          }
+        }
       });
 
       // Handle service worker controller change (when new SW takes over)
