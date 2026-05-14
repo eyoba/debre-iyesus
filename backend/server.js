@@ -423,14 +423,18 @@ app.get('/api/admin/dashboard', authenticateToken, async (req, res) => {
 
     console.log('DEBUG: Final counts - 18+:', members18Plus, 'Under 18:', membersUnder18);
 
+    const totalMembers = parseInt(membersCount.rows[0].count);
+    const membersNoAge = totalMembers - members18Plus - membersUnder18;
+
     res.json({
       church: church.rows[0] || {},
       stats: {
         news: parseInt(newsCount.rows[0].count),
         upcoming_events: parseInt(eventsCount.rows[0].count),
-        members: parseInt(membersCount.rows[0].count),
+        members: totalMembers,
         members_18_plus: members18Plus,
         members_under_18: membersUnder18,
+        members_no_age: membersNoAge,
         photos: parseInt(photosCount.rows[0].count)
       },
       recent_news: recentNews.rows,

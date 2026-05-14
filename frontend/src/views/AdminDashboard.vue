@@ -59,6 +59,14 @@
           </div>
         </div>
 
+        <div v-if="isSuperAdmin" class="stat-card card">
+          <div class="stat-icon unknown-icon">❓</div>
+          <div class="stat-content">
+            <h3>{{ stats.members_no_age || 0 }}</h3>
+            <p>Uten personnummer</p>
+          </div>
+        </div>
+
         <div class="stat-card card">
           <div class="stat-icon news-icon">📰</div>
           <div class="stat-content">
@@ -307,6 +315,10 @@ export default {
 
 .children-icon {
   background-color: #fce7f3;
+}
+
+.unknown-icon {
+  background-color: #f3f4f6;
 }
 
 .news-icon {
