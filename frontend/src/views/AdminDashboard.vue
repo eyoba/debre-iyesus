@@ -341,11 +341,31 @@ export default {
 .action-card-primary {
   border-left: 4px solid var(--primary-color, #3b82f6);
   background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .action-card-primary:hover {
   border-left-color: #2563eb;
   background: linear-gradient(135deg, #dbeafe 0%, #f0f7ff 100%);
+}
+
+.action-card-primary .action-icon {
+  font-size: 1.75rem;
+  margin-bottom: 0;
+}
+
+.action-card-primary h3 {
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+}
+
+.action-card-primary p {
+  font-size: 0.8rem;
+  margin: 0;
 }
 
 /* Action Cards */
