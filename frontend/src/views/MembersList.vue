@@ -42,7 +42,7 @@
             <th>ስም ኣቦ ንስሓ</th>
             <th>Telefon</th>
             <th>
-              Personnummer
+              Personnr.
               <label class="checkbox-inline">
                 <input
                   type="checkbox"
@@ -51,11 +51,11 @@
               </label>
             </th>
             <th>Adresse</th>
-            <th>Medlemskortnr.</th>
-            <th>Kortutstedelsesdato</th>
+            <th>Kortnr.</th>
+            <th>Kortdato</th>
             <th>SMS</th>
             <th>Status</th>
-            <th>Handlinger</th>
+            <th>Handling</th>
           </tr>
         </thead>
         <tbody>
@@ -88,7 +88,7 @@
                 Inaktiv
               </button>
               <button v-else @click="confirmPermanentDelete(member)" class="btn btn-sm btn-danger">
-                Slett permanent
+                Slett
               </button>
             </td>
           </tr>
@@ -256,8 +256,8 @@ export default {
 
 <style scoped>
 .members-list {
-  padding: 2rem;
-  max-width: 1400px;
+  padding: 1rem 1.5rem;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -331,20 +331,28 @@ export default {
 .members-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 0.78rem;
+  table-layout: fixed;
 }
 
 .members-table th {
   background: var(--gray-50);
-  padding: 1rem;
+  padding: 0.4rem 0.5rem;
   text-align: left;
   font-weight: 600;
   color: var(--gray-700);
   border-bottom: 2px solid var(--gray-200);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .members-table td {
-  padding: 1rem;
+  padding: 0.4rem 0.5rem;
   border-bottom: 1px solid var(--gray-100);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .member-name {
@@ -365,9 +373,9 @@ export default {
 
 .badge {
   display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.75rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 8px;
+  font-size: 0.7rem;
   font-weight: 600;
 }
 
@@ -392,8 +400,9 @@ export default {
 }
 
 .btn-sm {
-  padding: 0.4rem 0.8rem;
-  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.72rem;
+  white-space: nowrap;
 }
 
 .alert-error {
