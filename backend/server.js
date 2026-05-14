@@ -813,18 +813,6 @@ app.post('/api/members', authenticateToken, requireSuperAdmin, async (req, res) 
       return res.status(400).json({ error: 'Personnummer must be 11 digits' });
     }
 
-    // Check for duplicate phone number only if provided
-    if (phone_number) {
-      const duplicateCheck = await pool.query(
-        'SELECT id FROM members WHERE phone_number = $1',
-        [phone_number]
-      );
-
-      if (duplicateCheck.rows.length > 0) {
-        return res.status(400).json({ error: 'Member with this phone number already exists' });
-      }
-    }
-
     if (card_number) {
       const cardNumberCheck = await pool.query(
         'SELECT id FROM members WHERE card_number = $1',
