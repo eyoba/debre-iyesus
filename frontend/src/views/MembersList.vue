@@ -493,11 +493,30 @@ export default {
 
   .members-table {
     font-size: 0.85rem;
+    table-layout: auto;
   }
 
   .members-table th,
   .members-table td {
     padding: 0.5rem;
+  }
+
+  /* Hide non-essential columns on mobile — keep: Navn, Telefon, Status, Handling */
+  .members-table th:nth-child(2),
+  .members-table td:nth-child(2),
+  .members-table th:nth-child(3),
+  .members-table td:nth-child(3),
+  .members-table th:nth-child(5),
+  .members-table td:nth-child(5),
+  .members-table th:nth-child(6),
+  .members-table td:nth-child(6),
+  .members-table th:nth-child(7),
+  .members-table td:nth-child(7),
+  .members-table th:nth-child(8),
+  .members-table td:nth-child(8),
+  .members-table th:nth-child(9),
+  .members-table td:nth-child(9) {
+    display: none;
   }
 }
 </style>

@@ -355,11 +355,32 @@ export default {
 
   .baptism-table {
     font-size: 0.75rem;
+    table-layout: auto;
   }
 
   .baptism-table th,
   .baptism-table td {
     padding: 0.5rem;
+  }
+
+  /* Hide non-essential columns on mobile — keep: ዕለተ ጥምቀት, ስም ክርስትና ሕጻን, ተግባራት */
+  .baptism-table th:nth-child(1),
+  .baptism-table td:nth-child(1),
+  .baptism-table th:nth-child(2),
+  .baptism-table td:nth-child(2),
+  .baptism-table th:nth-child(5),
+  .baptism-table td:nth-child(5),
+  .baptism-table th:nth-child(6),
+  .baptism-table td:nth-child(6),
+  .baptism-table th:nth-child(7),
+  .baptism-table td:nth-child(7),
+  .baptism-table th:nth-child(8),
+  .baptism-table td:nth-child(8),
+  .baptism-table th:nth-child(9),
+  .baptism-table td:nth-child(9),
+  .baptism-table th:nth-child(10),
+  .baptism-table td:nth-child(10) {
+    display: none;
   }
 }
 </style>
