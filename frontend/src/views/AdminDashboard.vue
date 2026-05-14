@@ -12,6 +12,27 @@
     </div>
 
     <div v-else>
+      <!-- Top Quick Links (always visible first) -->
+      <div v-if="isSuperAdmin" class="top-quick-links grid grid-3 mb-4">
+        <router-link to="/admin/members" class="action-card card action-card-primary">
+          <div class="action-icon">📋</div>
+          <h3>Se alle medlemmer</h3>
+          <p>Vis, søk og filtrer medlemslisten</p>
+        </router-link>
+
+        <router-link to="/admin/members/add" class="action-card card action-card-primary">
+          <div class="action-icon">➕</div>
+          <h3>Legg til medlem</h3>
+          <p>Registrer nytt medlem i systemet</p>
+        </router-link>
+
+        <router-link to="/admin/baptism" class="action-card card action-card-primary">
+          <div class="action-icon">✝️</div>
+          <h3>ናይ ክርስትና/ጥምቀት መዝገብ</h3>
+          <p>መዝገብ ጥምቀት ኣርእዩን ኣመሓድሩን</p>
+        </router-link>
+      </div>
+
       <!-- Stats Cards -->
       <div class="stats-grid grid grid-3">
         <div v-if="isSuperAdmin" class="stat-card card">
@@ -67,24 +88,6 @@
       <div class="quick-actions mt-4">
         <h2 class="mb-3">Quick Actions</h2>
         <div class="grid grid-3">
-          <router-link v-if="isSuperAdmin" to="/admin/members" class="action-card card">
-            <div class="action-icon">📋</div>
-            <h3>Se alle medlemmer</h3>
-            <p>Vis, søk og filtrer medlemslisten</p>
-          </router-link>
-
-          <router-link v-if="isSuperAdmin" to="/admin/members/add" class="action-card card">
-            <div class="action-icon">➕</div>
-            <h3>Legg til medlem</h3>
-            <p>Registrer nytt medlem i systemet</p>
-          </router-link>
-
-          <router-link v-if="isSuperAdmin" to="/admin/baptism" class="action-card card">
-            <div class="action-icon">✝️</div>
-            <h3>ናይ ክርስትና/ጥምቀት መዝገብ</h3>
-            <p>መዝገብ ጥምቀት ኣርእዩን ኣመሓድሩን</p>
-          </router-link>
-
           <router-link to="/admin/church-info" class="action-card card">
             <div class="action-icon">⛪</div>
             <h3>Church Information</h3>
@@ -328,6 +331,21 @@ export default {
   margin: 0;
   color: var(--gray-600);
   font-size: 1rem;
+}
+
+/* Top Quick Links */
+.top-quick-links {
+  margin-bottom: 2rem;
+}
+
+.action-card-primary {
+  border-left: 4px solid var(--primary-color, #3b82f6);
+  background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+}
+
+.action-card-primary:hover {
+  border-left-color: #2563eb;
+  background: linear-gradient(135deg, #dbeafe 0%, #f0f7ff 100%);
 }
 
 /* Action Cards */
