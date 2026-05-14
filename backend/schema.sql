@@ -142,6 +142,7 @@ CREATE TABLE IF NOT EXISTS members (
 -- Baptism/Christening records (ናይ ክርስትና/ጥምቀት መዝገብ)
 CREATE TABLE IF NOT EXISTS baptism_records (
     id SERIAL PRIMARY KEY,
+    record_number VARCHAR(50), -- ተ.ቁ (ተርታ ቁጽሪ) - Serial/record number
     event_date DATE NOT NULL,
     child_baptism_name VARCHAR(200) NOT NULL,
     child_call_name VARCHAR(200),

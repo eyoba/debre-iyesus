@@ -37,6 +37,7 @@
       <table class="baptism-table">
         <thead>
           <tr>
+            <th>ተ.ቁ</th>
             <th>ዕለት</th>
             <th>ስም ክርስትና ሕጻን</th>
             <th>መጸዉዒ ስም</th>
@@ -53,6 +54,7 @@
         </thead>
         <tbody>
           <tr v-for="record in filteredRecords" :key="record.id">
+            <td>{{ record.record_number || '-' }}</td>
             <td>{{ formatDate(record.event_date) }}</td>
             <td class="record-name">{{ record.child_baptism_name }}</td>
             <td>{{ record.child_call_name || '-' }}</td>

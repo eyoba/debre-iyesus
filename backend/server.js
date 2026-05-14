@@ -1020,7 +1020,7 @@ app.get('/api/baptism-records/:id', authenticateToken, requireSuperAdmin, async 
 app.post('/api/baptism-records', authenticateToken, requireSuperAdmin, async (req, res) => {
   try {
     const {
-      event_date, child_baptism_name, child_call_name, father_name,
+      record_number, event_date, child_baptism_name, child_call_name, father_name,
       mother_name, parents_nationality, child_birth_date, child_baptism_date,
       godparent_name, baptism_church, priest_name, notes
     } = req.body;
@@ -1031,15 +1031,15 @@ app.post('/api/baptism-records', authenticateToken, requireSuperAdmin, async (re
 
     const result = await pool.query(`
       INSERT INTO baptism_records (
-        event_date, child_baptism_name, child_call_name, father_name,
+        record_number, event_date, child_baptism_name, child_call_name, father_name,
         mother_name, parents_nationality, child_birth_date, child_baptism_date,
         godparent_name, baptism_church, priest_name, notes,
         created_by, updated_by
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $13)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $14)
       RETURNING id
     `, [
-      event_date, child_baptism_name, child_call_name || null, father_name || null,
+      record_number || null, event_date, child_baptism_name, child_call_name || null, father_name || null,
       mother_name || null, parents_nationality || null, child_birth_date || null,
       child_baptism_date || null, godparent_name || null, baptism_church || null,
       priest_name || null, notes || null, req.user.username
@@ -1067,31 +1067,32 @@ app.put('/api/baptism-records/:id', authenticateToken, requireSuperAdmin, async 
     }
 
     const {
-      event_date, child_baptism_name, child_call_name, father_name,
+      record_number, event_date, child_baptism_name, child_call_name, father_name,
       mother_name, parents_nationality, child_birth_date, child_baptism_date,
       godparent_name, baptism_church, priest_name, notes, is_active
     } = req.body;
 
     await pool.query(`
       UPDATE baptism_records SET
-        event_date = $1,
-        child_baptism_name = $2,
-        child_call_name = $3,
-        father_name = $4,
-        mother_name = $5,
-        parents_nationality = $6,
-        child_birth_date = $7,
-        child_baptism_date = $8,
-        godparent_name = $9,
-        baptism_church = $10,
-        priest_name = $11,
-        notes = $12,
-        is_active = $13,
-        updated_by = $14,
+        record_number = $1,
+        event_date = $2,
+        child_baptism_name = $3,
+        child_call_name = $4,
+        father_name = $5,
+        mother_name = $6,
+        parents_nationality = $7,
+        child_birth_date = $8,
+        child_baptism_date = $9,
+        godparent_name = $10,
+        baptism_church = $11,
+        priest_name = $12,
+        notes = $13,
+        is_active = $14,
+        updated_by = $15,
         updated_at = NOW()
-      WHERE id = $15
+      WHERE id = $16
     `, [
-      event_date, child_baptism_name, child_call_name || null, father_name || null,
+      record_number || null, event_date, child_baptism_name, child_call_name || null, father_name || null,
       mother_name || null, parents_nationality || null, child_birth_date || null,
       child_baptism_date || null, godparent_name || null, baptism_church || null,
       priest_name || null, notes || null, is_active !== undefined ? is_active : true,

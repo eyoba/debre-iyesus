@@ -12,6 +12,17 @@
 
           <div class="form-row">
             <div class="form-group">
+              <label for="record_number">ተ.ቁ (ቁጽሪ መዝገብ)</label>
+              <input
+                type="text"
+                id="record_number"
+                v-model="formData.record_number"
+                placeholder="ቁጽሪ ምስ ምልእ ጸሓፍ"
+                :disabled="isSubmitting"
+              />
+            </div>
+
+            <div class="form-group">
               <label for="event_date">ዕለት *</label>
               <input
                 type="date"
@@ -21,17 +32,17 @@
                 :disabled="isSubmitting"
               />
             </div>
+          </div>
 
-            <div class="form-group">
-              <label for="child_baptism_name">ስም ክርስትና ሕጻን *</label>
-              <input
-                type="text"
-                id="child_baptism_name"
-                v-model="formData.child_baptism_name"
-                required
-                :disabled="isSubmitting"
-              />
-            </div>
+          <div class="form-group">
+            <label for="child_baptism_name">ስም ክርስትና ሕጻን *</label>
+            <input
+              type="text"
+              id="child_baptism_name"
+              v-model="formData.child_baptism_name"
+              required
+              :disabled="isSubmitting"
+            />
           </div>
 
           <div class="form-row">
@@ -180,6 +191,7 @@ export default {
   data() {
     return {
       formData: {
+        record_number: '',
         event_date: '',
         child_baptism_name: '',
         child_call_name: '',
