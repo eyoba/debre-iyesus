@@ -1025,8 +1025,8 @@ app.post('/api/baptism-records', authenticateToken, requireSuperAdmin, async (re
       godparent_name, baptism_church, priest_name, notes
     } = req.body;
 
-    if (!event_date || !child_baptism_name) {
-      return res.status(400).json({ error: 'Event date and child baptism name are required' });
+    if (!child_baptism_name) {
+      return res.status(400).json({ error: 'Child baptism name is required' });
     }
 
     const result = await pool.query(`
@@ -1039,7 +1039,7 @@ app.post('/api/baptism-records', authenticateToken, requireSuperAdmin, async (re
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $14)
       RETURNING id
     `, [
-      record_number || null, event_date, child_baptism_name, child_call_name || null, father_name || null,
+      record_number || null, event_date || null, child_baptism_name, child_call_name || null, father_name || null,
       mother_name || null, parents_nationality || null, child_birth_date || null,
       child_baptism_date || null, godparent_name || null, baptism_church || null,
       priest_name || null, notes || null, req.user.username

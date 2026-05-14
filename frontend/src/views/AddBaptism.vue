@@ -12,23 +12,22 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="record_number">ተ.ቁ (ቁጽሪ መዝገብ)</label>
+              <label for="child_birth_date">ዕለተ ልደት ሕጻን</label>
               <input
-                type="text"
-                id="record_number"
-                v-model="formData.record_number"
-                placeholder="ቁጽሪ ምስ ምልእ ጸሓፍ"
+                type="date"
+                id="child_birth_date"
+                v-model="formData.child_birth_date"
                 :disabled="isSubmitting"
               />
             </div>
 
             <div class="form-group">
-              <label for="event_date">ዕለት *</label>
+              <label for="record_number">ተ.ቁ (EROTCHBC)</label>
               <input
-                type="date"
-                id="event_date"
-                v-model="formData.event_date"
-                required
+                type="text"
+                id="record_number"
+                v-model="formData.record_number"
+                placeholder="EROTCHBC001"
                 :disabled="isSubmitting"
               />
             </div>
@@ -57,24 +56,14 @@
             </div>
 
             <div class="form-group">
-              <label for="child_birth_date">ዕለተ ልደት ሕጻን</label>
+              <label for="child_baptism_date">ዕለተ ጥምቀት ሕጻን</label>
               <input
                 type="date"
-                id="child_birth_date"
-                v-model="formData.child_birth_date"
+                id="child_baptism_date"
+                v-model="formData.child_baptism_date"
                 :disabled="isSubmitting"
               />
             </div>
-          </div>
-
-          <div class="form-group">
-            <label for="child_baptism_date">ዕለተ ጥምቀት ሕጻን</label>
-            <input
-              type="date"
-              id="child_baptism_date"
-              v-model="formData.child_baptism_date"
-              :disabled="isSubmitting"
-            />
           </div>
         </div>
 
@@ -192,7 +181,6 @@ export default {
     return {
       formData: {
         record_number: '',
-        event_date: '',
         child_baptism_name: '',
         child_call_name: '',
         father_name: '',

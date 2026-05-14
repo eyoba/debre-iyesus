@@ -37,32 +37,28 @@
       <table class="baptism-table">
         <thead>
           <tr>
-            <th>ተ.ቁ</th>
-            <th>ዕለት</th>
-            <th>ስም ክርስትና ሕጻን</th>
-            <th>መጸዉዒ ስም</th>
-            <th>ስም ኣቦ</th>
-            <th>ስም ኣደ</th>
-            <th>ዜግነት</th>
+            <th>ተ.ቁ (EROTCHBC)</th>
             <th>ዕለተ ልደት</th>
             <th>ዕለተ ጥምቀት</th>
-            <th>ስም ኣቦ/ኣደ ጥምቀት</th>
+            <th>ስም ክርስትና ሕጻን</th>
+            <th>መጸዉዒ ስም</th>
+            <th>ስም ኣቦ / ኣደ</th>
+            <th>ዜግነት</th>
+            <th>ኣቦ/ኣደ ጥምቀት</th>
             <th>ቤተክርስትያን</th>
-            <th>ስም ካህን</th>
+            <th>ካህን</th>
             <th>ተግባራት</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="record in filteredRecords" :key="record.id">
             <td>{{ record.record_number || '-' }}</td>
-            <td>{{ formatDate(record.event_date) }}</td>
-            <td class="record-name">{{ record.child_baptism_name }}</td>
-            <td>{{ record.child_call_name || '-' }}</td>
-            <td>{{ record.father_name || '-' }}</td>
-            <td>{{ record.mother_name || '-' }}</td>
-            <td>{{ record.parents_nationality || '-' }}</td>
             <td>{{ formatDate(record.child_birth_date) }}</td>
             <td>{{ formatDate(record.child_baptism_date) }}</td>
+            <td class="record-name">{{ record.child_baptism_name }}</td>
+            <td>{{ record.child_call_name || '-' }}</td>
+            <td>{{ [record.father_name, record.mother_name].filter(Boolean).join(' / ') || '-' }}</td>
+            <td>{{ record.parents_nationality || '-' }}</td>
             <td>{{ record.godparent_name || '-' }}</td>
             <td>{{ record.baptism_church || '-' }}</td>
             <td>{{ record.priest_name || '-' }}</td>
@@ -249,22 +245,29 @@ export default {
 .baptism-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 0.78rem;
+  table-layout: fixed;
 }
 
 .baptism-table th {
   background: var(--gray-50);
-  padding: 0.75rem;
+  padding: 0.4rem 0.5rem;
   text-align: left;
   font-weight: 600;
   color: var(--gray-700);
   border-bottom: 2px solid var(--gray-200);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .baptism-table td {
-  padding: 0.75rem;
+  padding: 0.4rem 0.5rem;
   border-bottom: 1px solid var(--gray-100);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 120px;
 }
 
 .record-name {
